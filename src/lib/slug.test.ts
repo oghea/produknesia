@@ -11,6 +11,12 @@ describe("slugify", () => {
   it("handles empty-ish input", () => {
     expect(slugify("!!!")).toBe("");
   });
+  it("strips leading and trailing hyphens", () => {
+    expect(slugify("- Kaos Anak -")).toBe("kaos-anak");
+  });
+  it("strips diacritics to ascii", () => {
+    expect(slugify("Café Kopi")).toBe("cafe-kopi");
+  });
 });
 
 describe("ensureUniqueSlug", () => {
