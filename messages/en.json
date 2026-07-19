@@ -1,0 +1,5 @@
+{
+  "app": { "name": "Produknesia", "tagline": "Discover Indonesian products" },
+  "nav": { "submit": "Submit", "signIn": "Sign in", "signOut": "Sign out" },
+  "home": { "popular": "Popular", "newest": "Newest" }
+}
