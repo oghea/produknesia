@@ -6,6 +6,8 @@ import {
   primaryKey,
   boolean,
   uniqueIndex,
+  index,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 
@@ -66,35 +68,52 @@ export const verificationTokens = pgTable(
 );
 
 // ---- Domain tables ----
-export const products = pgTable("products", {
-  id: id(),
-  slug: text("slug").notNull().unique(),
-  name: text("name").notNull(),
-  taglineId: text("tagline_id"),
-  taglineEn: text("tagline_en"),
-  descriptionId: text("description_id"),
-  descriptionEn: text("description_en"),
-  websiteUrl: text("website_url").notNull(),
-  logoUrl: text("logo_url"),
-  makerId: text("maker_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  status: text("status").notNull().default("pending"), // pending|approved|rejected
-  rejectionReason: text("rejection_reason"),
-  launchedAt: timestamp("launched_at"),
-  voteCount: integer("vote_count").notNull().default(0),
-  commentCount: integer("comment_count").notNull().default(0),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+export const products = pgTable(
+  "products",
+  {
+    id: id(),
+    slug: text("slug").notNull().unique(),
+    name: text("name").notNull(),
+    taglineId: text("tagline_id"),
+    taglineEn: text("tagline_en"),
+    descriptionId: text("description_id"),
+    descriptionEn: text("description_en"),
+    websiteUrl: text("website_url").notNull(),
+    logoUrl: text("logo_url"),
+    makerId: text("maker_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    status: text("status").notNull().default("pending"), // pending|approved|rejected
+    rejectionReason: text("rejection_reason"),
+    launchedAt: timestamp("launched_at"),
+    voteCount: integer("vote_count").notNull().default(0),
+    commentCount: integer("comment_count").notNull().default(0),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => ({
+    statusVoteIdx: index("products_status_vote_idx").on(t.status, t.voteCount),
+    statusLaunchedIdx: index("products_status_launched_idx").on(
+      t.status,
+      t.launchedAt,
+    ),
+    makerIdx: index("products_maker_idx").on(t.makerId),
+  }),
+);
 
-export const productImages = pgTable("product_images", {
-  id: id(),
-  productId: text("product_id")
-    .notNull()
-    .references(() => products.id, { onDelete: "cascade" }),
-  url: text("url").notNull(),
-  sortOrder: integer("sort_order").notNull().default(0),
-});
+export const productImages = pgTable(
+  "product_images",
+  {
+    id: id(),
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    url: text("url").notNull(),
+    sortOrder: integer("sort_order").notNull().default(0),
+  },
+  (t) => ({
+    productIdx: index("product_images_product_idx").on(t.productId),
+  }),
+);
 
 export const categories = pgTable("categories", {
   id: id(),
@@ -113,7 +132,10 @@ export const productCategories = pgTable(
       .notNull()
       .references(() => categories.id, { onDelete: "cascade" }),
   },
-  (t) => ({ pk: primaryKey({ columns: [t.productId, t.categoryId] }) }),
+  (t) => ({
+    pk: primaryKey({ columns: [t.productId, t.categoryId] }),
+    categoryIdx: index("product_categories_category_idx").on(t.categoryId),
+  }),
 );
 
 export const votes = pgTable(
@@ -133,19 +155,30 @@ export const votes = pgTable(
       t.productId,
       t.userId,
     ),
+    userIdx: index("votes_user_idx").on(t.userId),
   }),
 );
 
-export const comments = pgTable("comments", {
-  id: id(),
-  productId: text("product_id")
-    .notNull()
-    .references(() => products.id, { onDelete: "cascade" }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  parentId: text("parent_id"),
-  body: text("body").notNull(),
-  isDeleted: boolean("is_deleted").notNull().default(false),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+export const comments = pgTable(
+  "comments",
+  {
+    id: id(),
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    parentId: text("parent_id").references(
+      (): AnyPgColumn => comments.id,
+      { onDelete: "cascade" },
+    ),
+    body: text("body").notNull(),
+    isDeleted: boolean("is_deleted").notNull().default(false),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => ({
+    productIdx: index("comments_product_idx").on(t.productId),
+    parentIdx: index("comments_parent_idx").on(t.parentId),
+  }),
+);
