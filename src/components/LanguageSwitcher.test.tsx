@@ -13,7 +13,7 @@ vi.mock("@/i18n/navigation", () => ({
 describe("LanguageSwitcher", () => {
   it("offers both locales", () => {
     render(
-      <NextIntlClientProvider locale="id" messages={{}}>
+      <NextIntlClientProvider locale="id" messages={{ nav: { languageLabel: "Bahasa" } }}>
         <LanguageSwitcher />
       </NextIntlClientProvider>,
     );

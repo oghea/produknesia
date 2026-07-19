@@ -1,5 +1,5 @@
 {
   "app": { "name": "Produknesia", "tagline": "Temukan produk Indonesia" },
-  "nav": { "submit": "Kirim", "signIn": "Masuk", "signOut": "Keluar" },
+  "nav": { "submit": "Kirim", "signIn": "Masuk", "signOut": "Keluar", "languageLabel": "Bahasa" },
   "home": { "popular": "Populer", "newest": "Terbaru" }
 }
