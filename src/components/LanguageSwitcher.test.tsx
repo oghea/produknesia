@@ -19,5 +19,7 @@ describe("LanguageSwitcher", () => {
     );
     expect(screen.getByText("ID")).toBeInTheDocument();
     expect(screen.getByText("EN")).toBeInTheDocument();
+    expect(screen.getByText("ID")).toHaveAttribute("data-locale", "id");
+    expect(screen.getByText("EN")).toHaveAttribute("data-locale", "en");
   });
 });

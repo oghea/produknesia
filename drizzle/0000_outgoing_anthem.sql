@@ -28,7 +28,7 @@ CREATE TABLE "comments" (
 	"parent_id" text,
 	"body" text NOT NULL,
 	"is_deleted" boolean DEFAULT false NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "product_categories" (
@@ -57,10 +57,10 @@ CREATE TABLE "products" (
 	"maker_id" text NOT NULL,
 	"status" text DEFAULT 'pending' NOT NULL,
 	"rejection_reason" text,
-	"launched_at" timestamp,
+	"launched_at" timestamp with time zone,
 	"vote_count" integer DEFAULT 0 NOT NULL,
 	"comment_count" integer DEFAULT 0 NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "products_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
@@ -79,7 +79,7 @@ CREATE TABLE "users" (
 	"image" text,
 	"bio" text,
 	"role" text DEFAULT 'user' NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "users_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
@@ -95,7 +95,7 @@ CREATE TABLE "votes" (
 	"id" text PRIMARY KEY NOT NULL,
 	"product_id" text NOT NULL,
 	"user_id" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -109,6 +109,7 @@ ALTER TABLE "products" ADD CONSTRAINT "products_maker_id_users_id_fk" FOREIGN KE
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "votes" ADD CONSTRAINT "votes_product_id_products_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."products"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "votes" ADD CONSTRAINT "votes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "accounts_user_idx" ON "accounts" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "comments_product_idx" ON "comments" USING btree ("product_id");--> statement-breakpoint
 CREATE INDEX "comments_parent_idx" ON "comments" USING btree ("parent_id");--> statement-breakpoint
 CREATE INDEX "product_categories_category_idx" ON "product_categories" USING btree ("category_id");--> statement-breakpoint
@@ -116,5 +117,6 @@ CREATE INDEX "product_images_product_idx" ON "product_images" USING btree ("prod
 CREATE INDEX "products_status_vote_idx" ON "products" USING btree ("status","vote_count");--> statement-breakpoint
 CREATE INDEX "products_status_launched_idx" ON "products" USING btree ("status","launched_at");--> statement-breakpoint
 CREATE INDEX "products_maker_idx" ON "products" USING btree ("maker_id");--> statement-breakpoint
+CREATE INDEX "sessions_user_idx" ON "sessions" USING btree ("user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "votes_user_product_uniq" ON "votes" USING btree ("product_id","user_id");--> statement-breakpoint
 CREATE INDEX "votes_user_idx" ON "votes" USING btree ("user_id");

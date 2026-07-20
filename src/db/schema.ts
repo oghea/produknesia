@@ -24,7 +24,9 @@ export const users = pgTable("users", {
   image: text("image"),
   bio: text("bio"),
   role: text("role").notNull().default("user"), // "user" | "admin"
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
 });
 
 export const accounts = pgTable(
@@ -46,16 +48,23 @@ export const accounts = pgTable(
   },
   (t) => ({
     pk: primaryKey({ columns: [t.provider, t.providerAccountId] }),
+    userIdx: index("accounts_user_idx").on(t.userId),
   }),
 );
 
-export const sessions = pgTable("sessions", {
-  sessionToken: text("session_token").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-});
+export const sessions = pgTable(
+  "sessions",
+  {
+    sessionToken: text("session_token").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (t) => ({
+    userIdx: index("sessions_user_idx").on(t.userId),
+  }),
+);
 
 export const verificationTokens = pgTable(
   "verification_tokens",
@@ -85,10 +94,12 @@ export const products = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     status: text("status").notNull().default("pending"), // pending|approved|rejected
     rejectionReason: text("rejection_reason"),
-    launchedAt: timestamp("launched_at"),
+    launchedAt: timestamp("launched_at", { withTimezone: true, mode: "date" }),
     voteCount: integer("vote_count").notNull().default(0),
     commentCount: integer("comment_count").notNull().default(0),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+      .notNull()
+      .defaultNow(),
   },
   (t) => ({
     statusVoteIdx: index("products_status_vote_idx").on(t.status, t.voteCount),
@@ -148,7 +159,9 @@ export const votes = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+      .notNull()
+      .defaultNow(),
   },
   (t) => ({
     uniqUserProduct: uniqueIndex("votes_user_product_uniq").on(
@@ -175,7 +188,9 @@ export const comments = pgTable(
     ),
     body: text("body").notNull(),
     isDeleted: boolean("is_deleted").notNull().default(false),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+      .notNull()
+      .defaultNow(),
   },
   (t) => ({
     productIdx: index("comments_product_idx").on(t.productId),
