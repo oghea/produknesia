@@ -5,7 +5,9 @@ import ReactMarkdown from "react-markdown";
 import { auth } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
 import { getProductBySlug } from "@/db/queries/products";
+import { getVotedProductIds } from "@/db/queries/votes";
 import { pickLocalized } from "@/lib/locale-content";
+import { VoteButton } from "@/components/VoteButton";
 
 export default async function ProductPage({
   params,
@@ -24,6 +26,10 @@ export default async function ProductPage({
   if (product.status !== "approved" && !viewerIsMaker && !viewerIsAdmin) {
     notFound();
   }
+
+  const votedIds = session?.user
+    ? await getVotedProductIds(session.user.id, [product.id])
+    : new Set<string>();
 
   const t = await getTranslations("product");
   const { tagline, description } = pickLocalized(product, locale);
@@ -59,6 +65,14 @@ export default async function ProductPage({
           {makerName && (
             <p className="text-sm text-gray-400">{t("by", { name: makerName })}</p>
           )}
+        </div>
+        <div className="ml-auto">
+          <VoteButton
+            productId={product.id}
+            initialCount={product.voteCount}
+            initialVoted={votedIds.has(product.id)}
+            size="lg"
+          />
         </div>
       </div>
 

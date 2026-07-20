@@ -53,5 +53,6 @@
     "reasonPlaceholder": "Rejection reason (optional)",
     "submittedBy": "by {name}",
     "view": "View"
-  }
+  },
+  "vote": { "label": "Upvote", "voted": "Upvoted" }
 }

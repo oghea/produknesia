@@ -53,5 +53,6 @@
     "reasonPlaceholder": "Alasan penolakan (opsional)",
     "submittedBy": "oleh {name}",
     "view": "Lihat"
-  }
+  },
+  "vote": { "label": "Dukung", "voted": "Didukung" }
 }
