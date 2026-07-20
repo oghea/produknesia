@@ -64,6 +64,7 @@ export default async function SubmitPage({
               variant="outline"
               size="sm"
               className="cursor-pointer"
+              nativeButton={false}
               render={<Link href="/" />}
             >
               {t("app.name")} →

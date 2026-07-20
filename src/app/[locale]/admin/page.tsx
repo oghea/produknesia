@@ -66,6 +66,7 @@ export default async function AdminPage({
                   variant="ghost"
                   size="sm"
                   className="cursor-pointer"
+                  nativeButton={false}
                   render={<Link href={`/products/${p.slug}`} />}
                 >
                   {t("view")}

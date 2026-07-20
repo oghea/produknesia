@@ -32,6 +32,7 @@ export async function Header() {
         <Button
           size="sm"
           className="cursor-pointer"
+          nativeButton={false}
           render={<Link href="/submit" />}
         >
           <Plus className="size-4" />

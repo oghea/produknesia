@@ -140,6 +140,7 @@ export default async function ProductPage({
         <Button
           size="sm"
           className="ml-auto cursor-pointer"
+          nativeButton={false}
           render={
             <a
               href={product.websiteUrl}
