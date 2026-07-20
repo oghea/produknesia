@@ -9,10 +9,12 @@ export async function ProductCard({
   item,
   locale,
   viewerVoted,
+  showVote = true,
 }: {
   item: FeedItem;
   locale: string;
   viewerVoted: boolean;
+  showVote?: boolean;
 }) {
   const t = await getTranslations("feed");
   const { tagline } = pickLocalized(
@@ -51,11 +53,13 @@ export async function ProductCard({
           )}
         </div>
       </Link>
-      <VoteButton
-        productId={item.id}
-        initialCount={item.voteCount}
-        initialVoted={viewerVoted}
-      />
+      {showVote && (
+        <VoteButton
+          productId={item.id}
+          initialCount={item.voteCount}
+          initialVoted={viewerVoted}
+        />
+      )}
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default async function ProductPage({
   const detail = await getProductBySlug(slug);
   if (!detail) notFound();
 
-  const { product, makerName, images, categories } = detail;
+  const { product, makerName, makerUsername, images, categories } = detail;
   const session = await auth();
   const viewerIsMaker = session?.user?.id === product.makerId;
   const viewerIsAdmin = isAdmin(session);
@@ -69,7 +69,15 @@ export default async function ProductPage({
           <h1 className="text-2xl font-bold">{product.name}</h1>
           {tagline && <p className="text-gray-600">{tagline}</p>}
           {makerName && (
-            <p className="text-sm text-gray-400">{t("by", { name: makerName })}</p>
+            <p className="text-sm text-gray-400">
+              {makerUsername ? (
+                <Link href={`/u/${makerUsername}`} className="hover:underline">
+                  {t("by", { name: makerName })}
+                </Link>
+              ) : (
+                t("by", { name: makerName })
+              )}
+            </p>
           )}
         </div>
         {product.status === "approved" && (

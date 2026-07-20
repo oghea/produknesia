@@ -73,5 +73,14 @@
     "title": "Hasil pencarian \"{q}\"",
     "empty": "Produk tidak ditemukan.",
     "tooShort": "Ketik minimal 2 karakter untuk mencari."
+  },
+  "profile": {
+    "joined": "Bergabung {date}",
+    "submissions": "Produk",
+    "upvoted": "Didukung",
+    "noSubmissions": "Belum ada produk yang diluncurkan.",
+    "noUpvotes": "Belum ada dukungan.",
+    "statusPending": "Sedang ditinjau",
+    "statusRejected": "Ditolak"
   }
 }
