@@ -1,3 +1,4 @@
+import { Flame, PackageOpen, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { auth } from "@/auth";
@@ -5,6 +6,9 @@ import { listFeed, type FeedSort } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { listCategories } from "@/db/queries/categories";
 import { ProductCard } from "@/components/ProductCard";
+import { FadeUp, StaggerItem, StaggerList } from "@/components/motion-primitives";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export default async function Home({
   params,
@@ -17,59 +21,72 @@ export default async function Home({
   const { sort: sortParam } = await searchParams;
   const sort: FeedSort = sortParam === "newest" ? "newest" : "popular";
   const t = await getTranslations();
-  const items = await listFeed(sort);
-  const cats = await listCategories();
-  const session = await auth();
+  const [items, cats, session] = await Promise.all([
+    listFeed(sort),
+    listCategories(),
+    auth(),
+  ]);
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
     : new Set<string>();
 
   const tabCls = (active: boolean) =>
-    `rounded-md px-3 py-1 text-sm font-medium ${
-      active ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100"
-    }`;
+    cn(
+      "flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+      active
+        ? "bg-primary text-primary-foreground shadow-xs"
+        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+    );
 
   return (
-    <div className="mx-auto max-w-2xl p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">{t("app.tagline")}</h1>
-        <nav className="flex gap-1">
-          <Link href="/?sort=popular" className={tabCls(sort === "popular")}>
-            {t("home.popular")}
-          </Link>
-          <Link href="/?sort=newest" className={tabCls(sort === "newest")}>
-            {t("home.newest")}
-          </Link>
-        </nav>
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      <FadeUp>
+        <h1 className="font-heading text-2xl font-bold sm:text-3xl">
+          {t("app.tagline")}
+        </h1>
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {cats.map((c) => (
+            <Badge
+              key={c.id}
+              variant="secondary"
+              className="cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground"
+              render={<Link href={`/categories/${c.slug}`} />}
+            >
+              {locale === "id" ? c.nameId : c.nameEn}
+            </Badge>
+          ))}
+        </div>
+      </FadeUp>
+
+      <div className="mt-8 flex items-center gap-1 border-b pb-3">
+        <Link href="/?sort=popular" className={tabCls(sort === "popular")}>
+          <Flame className="size-4" aria-hidden="true" />
+          {t("home.popular")}
+        </Link>
+        <Link href="/?sort=newest" className={tabCls(sort === "newest")}>
+          <Sparkles className="size-4" aria-hidden="true" />
+          {t("home.newest")}
+        </Link>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {cats.map((c) => (
-          <Link
-            key={c.id}
-            href={`/categories/${c.slug}`}
-            className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700 hover:bg-gray-200"
-          >
-            {locale === "id" ? c.nameId : c.nameEn}
-          </Link>
-        ))}
-      </div>
-
-      <div className="mt-6 flex flex-col gap-3">
-        {items.length === 0 && (
-          <p className="rounded-md bg-gray-50 p-6 text-center text-gray-500">
-            {t("feed.empty")}
-          </p>
-        )}
-        {items.map((item) => (
-          <ProductCard
-            key={item.id}
-            item={item}
-            locale={locale}
-            viewerVoted={votedIds.has(item.id)}
-          />
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
+          <PackageOpen className="size-8 text-muted-foreground" aria-hidden="true" />
+          <p className="text-sm text-muted-foreground">{t("feed.empty")}</p>
+        </div>
+      ) : (
+        <StaggerList className="mt-4 flex flex-col gap-3">
+          {items.map((item) => (
+            <StaggerItem key={item.id}>
+              <ProductCard
+                item={item}
+                locale={locale}
+                viewerVoted={votedIds.has(item.id)}
+              />
+            </StaggerItem>
+          ))}
+        </StaggerList>
+      )}
     </div>
   );
 }
