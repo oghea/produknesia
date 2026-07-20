@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { pickLocalized } from "@/lib/locale-content";
@@ -23,10 +24,10 @@ export async function ProductCard({
   );
 
   return (
-    <div className="flex items-center gap-4 rounded-lg border border-gray-200 p-4 hover:border-gray-400">
+    <div className="group flex items-center gap-4 rounded-xl border bg-card p-4 shadow-xs transition-colors hover:border-primary/40">
       <Link
         href={`/products/${item.slug}`}
-        className="flex min-w-0 flex-1 items-center gap-4"
+        className="flex min-w-0 flex-1 cursor-pointer items-center gap-4"
       >
         {item.logoUrl ? (
           <Image
@@ -34,23 +35,29 @@ export async function ProductCard({
             alt=""
             width={56}
             height={56}
-            className="h-14 w-14 rounded-md object-cover"
+            className="size-14 shrink-0 rounded-xl border object-cover"
           />
         ) : (
-          <div className="flex h-14 w-14 items-center justify-center rounded-md bg-gray-100 text-xl font-bold text-gray-400">
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-accent font-heading text-xl font-bold text-accent-foreground">
             {item.name.charAt(0).toUpperCase()}
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <h2 className="truncate font-semibold">{item.name}</h2>
+          <h2 className="truncate font-heading font-semibold transition-colors group-hover:text-primary">
+            {item.name}
+          </h2>
           {tagline && (
-            <p className="truncate text-sm text-gray-600">{tagline}</p>
+            <p className="truncate text-sm text-muted-foreground">{tagline}</p>
           )}
-          {item.makerName && (
-            <p className="text-xs text-gray-400">
-              {t("by", { name: item.makerName })}
-            </p>
-          )}
+          <div className="mt-0.5 flex items-center gap-3 text-xs text-muted-foreground/80">
+            {item.makerName && <span>{t("by", { name: item.makerName })}</span>}
+            {item.commentCount > 0 && (
+              <span className="flex items-center gap-1">
+                <MessageCircle className="size-3" aria-hidden="true" />
+                {item.commentCount}
+              </span>
+            )}
+          </div>
         </div>
       </Link>
       {showVote && (

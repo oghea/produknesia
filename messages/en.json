@@ -1,7 +1,21 @@
 {
-  "app": { "name": "Produknesia", "tagline": "Discover Indonesian products" },
-  "nav": { "submit": "Submit", "signIn": "Sign in", "signOut": "Sign out", "languageLabel": "Language" },
-  "home": { "popular": "Popular", "newest": "Newest" },
+  "app": {
+    "name": "Produknesia",
+    "tagline": "Discover Indonesian products"
+  },
+  "nav": {
+    "submit": "Submit",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "languageLabel": "Language",
+    "theme": "Toggle theme",
+    "profile": "My profile",
+    "admin": "Admin"
+  },
+  "home": {
+    "popular": "Popular",
+    "newest": "Newest"
+  },
   "feed": {
     "empty": "No products yet. Be the first to launch!",
     "by": "by {name}",
@@ -66,8 +80,13 @@
     "submittedBy": "by {name}",
     "view": "View"
   },
-  "vote": { "label": "Upvote", "voted": "Upvoted" },
-  "categories": { "empty": "No products in this category yet." },
+  "vote": {
+    "label": "Upvote",
+    "voted": "Upvoted"
+  },
+  "categories": {
+    "empty": "No products in this category yet."
+  },
   "search": {
     "placeholder": "Search products…",
     "title": "Search results for \"{q}\"",

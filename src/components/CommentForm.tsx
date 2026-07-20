@@ -6,6 +6,8 @@ import {
   addCommentAction,
   type CommentState,
 } from "@/app/[locale]/products/[slug]/actions";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 const initialState: CommentState = { ok: false, errors: {} };
 
@@ -34,22 +36,23 @@ export function CommentForm({
       <input type="hidden" name="productId" value={productId} />
       <input type="hidden" name="slug" value={slug} />
       {parentId && <input type="hidden" name="parentId" value={parentId} />}
-      <textarea
+      <Textarea
         name="body"
         rows={parentId ? 2 : 3}
         placeholder={t("comments.placeholder")}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none"
+        aria-label={t("comments.placeholder")}
       />
       {state.errors.body && (
-        <p className="text-sm text-red-600">{t(state.errors.body)}</p>
+        <p className="text-sm text-destructive">{t(state.errors.body)}</p>
       )}
-      <button
+      <Button
         type="submit"
+        size="sm"
         disabled={pending}
-        className="self-end rounded-md bg-black px-4 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+        className="cursor-pointer self-end"
       >
         {parentId ? t("comments.reply") : t("comments.send")}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -1,5 +1,8 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { CalendarDays, ChevronUp, Package } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
@@ -11,23 +14,39 @@ import {
 } from "@/db/queries/users";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { ProductCard } from "@/components/ProductCard";
+import { FadeUp } from "@/components/motion-primitives";
+import { Badge } from "@/components/ui/badge";
 
 function StatusBadge({ status, t }: { status: string; t: (k: string) => string }) {
   if (status === "pending") {
     return (
-      <span className="rounded-full bg-yellow-50 px-2 py-0.5 text-xs text-yellow-800">
+      <Badge className="border-chart-2/40 bg-accent text-accent-foreground">
         {t("statusPending")}
-      </span>
+      </Badge>
     );
   }
   if (status === "rejected") {
     return (
-      <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs text-red-800">
+      <Badge className="border-destructive/30 bg-destructive/10 text-destructive">
         {t("statusRejected")}
-      </span>
+      </Badge>
     );
   }
   return null;
+}
+
+// Deduped across generateMetadata + the page render.
+const getProfile = cache(getUserByUsername);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}): Promise<Metadata> {
+  const { username } = await params;
+  const profile = await getProfile(username);
+  if (!profile) return {};
+  return { title: profile.name ?? profile.username ?? undefined };
 }
 
 export default async function ProfilePage({
@@ -36,7 +55,7 @@ export default async function ProfilePage({
   params: Promise<{ locale: string; username: string }>;
 }) {
   const { locale, username } = await params;
-  const profile = await getUserByUsername(username);
+  const profile = await getProfile(username);
   if (!profile) notFound();
 
   const session = await auth();
@@ -59,7 +78,7 @@ export default async function ProfilePage({
   const renderCard = (item: MakerProduct | (typeof upvoted)[number]) => {
     const status = "status" in item ? item.status : "approved";
     return (
-      <div key={item.id} className="flex flex-col gap-1">
+      <div key={item.id} className="flex flex-col gap-1.5">
         {status !== "approved" && (
           <div>
             <StatusBadge status={status} t={t} />
@@ -76,45 +95,64 @@ export default async function ProfilePage({
   };
 
   return (
-    <div className="mx-auto max-w-2xl p-6">
-      <div className="flex items-center gap-4">
-        {profile.image ? (
-          <Image
-            src={profile.image}
-            alt=""
-            width={64}
-            height={64}
-            className="h-16 w-16 rounded-full object-cover"
-          />
-        ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 text-2xl font-bold text-gray-500">
-            {(profile.name ?? "?").charAt(0).toUpperCase()}
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      <FadeUp>
+        <div className="flex items-center gap-4">
+          {profile.image ? (
+            <Image
+              src={profile.image}
+              alt=""
+              width={64}
+              height={64}
+              className="size-16 shrink-0 rounded-full border object-cover"
+            />
+          ) : (
+            <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-accent font-heading text-2xl font-bold text-accent-foreground">
+              {(profile.name ?? "?").charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className="min-w-0">
+            <h1 className="truncate font-heading text-2xl font-bold">
+              {profile.name ?? profile.username}
+            </h1>
+            {profile.bio && (
+              <p className="text-muted-foreground">{profile.bio}</p>
+            )}
+            <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground/80">
+              <CalendarDays className="size-3.5" aria-hidden="true" />
+              {t("joined", {
+                date: format.dateTime(profile.createdAt, {
+                  dateStyle: "medium",
+                }),
+              })}
+            </p>
           </div>
-        )}
-        <div>
-          <h1 className="text-2xl font-bold">{profile.name ?? profile.username}</h1>
-          {profile.bio && <p className="text-gray-600">{profile.bio}</p>}
-          <p className="text-sm text-gray-400">
-            {t("joined", {
-              date: format.dateTime(profile.createdAt, { dateStyle: "medium" }),
-            })}
-          </p>
         </div>
-      </div>
+      </FadeUp>
 
-      <h2 className="mt-8 text-lg font-bold">{t("submissions")}</h2>
+      <h2 className="mt-10 flex items-center gap-2 font-heading text-lg font-bold">
+        <Package className="size-4.5 text-primary" aria-hidden="true" />
+        {t("submissions")}
+      </h2>
       <div className="mt-3 flex flex-col gap-3">
         {submissions.length === 0 ? (
-          <p className="text-sm text-gray-500">{t("noSubmissions")}</p>
+          <p className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+            {t("noSubmissions")}
+          </p>
         ) : (
           submissions.map(renderCard)
         )}
       </div>
 
-      <h2 className="mt-8 text-lg font-bold">{t("upvoted")}</h2>
+      <h2 className="mt-10 flex items-center gap-2 font-heading text-lg font-bold">
+        <ChevronUp className="size-4.5 text-primary" aria-hidden="true" />
+        {t("upvoted")}
+      </h2>
       <div className="mt-3 flex flex-col gap-3">
         {upvoted.length === 0 ? (
-          <p className="text-sm text-gray-500">{t("noUpvotes")}</p>
+          <p className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+            {t("noUpvotes")}
+          </p>
         ) : (
           upvoted.map(renderCard)
         )}

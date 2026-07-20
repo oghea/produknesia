@@ -1,16 +1,11 @@
+import { Trash2 } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import type { CommentItem } from "@/db/queries/comments";
 import { deleteCommentAction } from "@/app/[locale]/products/[slug]/actions";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 import { CommentForm } from "./CommentForm";
-
-function Avatar({ name }: { name: string | null }) {
-  return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 text-sm font-bold text-gray-500">
-      {(name ?? "?").charAt(0).toUpperCase()}
-    </div>
-  );
-}
 
 async function Comment({
   comment,
@@ -25,13 +20,17 @@ async function Comment({
   const format = await getFormatter();
   return (
     <div className="flex gap-3">
-      <Avatar name={comment.authorName} />
+      <Avatar className="size-8 shrink-0">
+        <AvatarFallback className="text-sm font-semibold">
+          {(comment.authorName ?? "?").charAt(0).toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="text-sm font-semibold">
             {comment.authorName ?? "?"}
           </span>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-muted-foreground/80">
             {format.dateTime(comment.createdAt, { dateStyle: "medium" })}
           </span>
           {canDelete && !comment.isDeleted && (
@@ -39,17 +38,20 @@ async function Comment({
               <input type="hidden" name="commentId" value={comment.id} />
               <button
                 type="submit"
-                className="text-xs text-gray-400 hover:text-red-600"
+                aria-label={t("delete")}
+                className="flex cursor-pointer items-center gap-1 rounded-md p-1 text-xs text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                {t("delete")}
+                <Trash2 className="size-3.5" aria-hidden="true" />
               </button>
             </form>
           )}
         </div>
         {comment.isDeleted ? (
-          <p className="text-sm italic text-gray-400">{t("deleted")}</p>
+          <p className="text-sm italic text-muted-foreground/70">
+            {t("deleted")}
+          </p>
         ) : (
-          <div className="prose prose-sm max-w-none">
+          <div className="prose prose-sm max-w-none dark:prose-invert">
             <ReactMarkdown
               components={{
                 img: () => null,
@@ -97,8 +99,9 @@ export async function CommentSection({
     viewerIsAdmin || (viewerId !== null && viewerId === c.authorId);
 
   return (
-    <section className="mt-10 border-t border-gray-200 pt-6">
-      <h2 className="text-lg font-bold">
+    <section className="mt-12">
+      <Separator />
+      <h2 className="mt-8 font-heading text-lg font-bold">
         {t("title", { count: comments.filter((c) => !c.isDeleted).length })}
       </h2>
 
@@ -106,20 +109,20 @@ export async function CommentSection({
         {isAuthenticated ? (
           <CommentForm productId={productId} slug={slug} />
         ) : (
-          <p className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
+          <p className="rounded-lg border border-dashed bg-muted/50 p-4 text-sm text-muted-foreground">
             {t("signInToComment")}
           </p>
         )}
       </div>
 
       {topLevel.length === 0 && (
-        <p className="mt-6 text-sm text-gray-500">{t("empty")}</p>
+        <p className="mt-6 text-sm text-muted-foreground">{t("empty")}</p>
       )}
 
-      <div className="mt-6 flex flex-col gap-6">
+      <div className="mt-8 flex flex-col gap-7">
         {topLevel.map((c) => (
           <Comment key={c.id} comment={c} canDelete={canDelete(c)}>
-            <div className="mt-3 flex flex-col gap-4 border-l-2 border-gray-100 pl-4">
+            <div className="mt-3 flex flex-col gap-4 border-l-2 border-border/70 pl-4">
               {repliesFor(c.id).map((r) => (
                 <Comment key={r.id} comment={r} canDelete={canDelete(r)} />
               ))}
