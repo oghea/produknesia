@@ -1040,6 +1040,8 @@ git commit -m "feat: add locale layout, header, language switcher, auth buttons"
 - On Vercel: set `DATABASE_URL`, `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`.
 - Run `pnpm db:migrate` against Neon (locally with prod `DATABASE_URL`, or via a Vercel build/deploy step) to create tables.
 - **Admin bootstrap:** after your own first login, set your `users.role` to `admin` directly in Neon (SQL: `update users set role = 'admin' where email = 'you@example.com';`). Phase 2's admin queue depends on this.
+- Register the OAuth callback URL in Google Cloud Console: https://<your-domain>/api/auth/callback/google (and http://localhost:3000/api/auth/callback/google for local dev).
+- Note: all pages currently render dynamically (the header calls auth()); the generateStaticParams/setRequestLocale scaffolding becomes effective only if the header stops being globally dynamic.
 
 ## Self-Review
 

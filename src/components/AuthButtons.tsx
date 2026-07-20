@@ -1,16 +1,17 @@
 import { auth, signIn, signOut } from "@/auth";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export async function AuthButtons() {
   const session = await auth();
   const t = await getTranslations("nav");
+  const locale = await getLocale();
 
   if (session?.user) {
     return (
       <form
         action={async () => {
           "use server";
-          await signOut();
+          await signOut({ redirectTo: `/${locale}` });
         }}
       >
         <span style={{ marginRight: 8 }}>{session.user.name}</span>
@@ -22,7 +23,7 @@ export async function AuthButtons() {
     <form
       action={async () => {
         "use server";
-        await signIn("google");
+        await signIn("google", { redirectTo: `/${locale}` });
       }}
     >
       <button type="submit">{t("signIn")}</button>
