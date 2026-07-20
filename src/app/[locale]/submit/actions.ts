@@ -36,16 +36,20 @@ export async function submitProduct(
     if (err) return { errors: { [f === logoFiles[0] ? "logo" : "screenshots"]: err } };
   }
 
-  const logoUrl = logoFiles[0] ? await putImage(logoFiles[0]) : undefined;
-  const screenshotUrls: string[] = [];
-  for (const f of screenshotFiles) screenshotUrls.push(await putImage(f));
+  try {
+    const logoUrl = logoFiles[0] ? await putImage(logoFiles[0]) : undefined;
+    const screenshotUrls: string[] = [];
+    for (const f of screenshotFiles) screenshotUrls.push(await putImage(f));
 
-  await createProduct({
-    ...parsed.data,
-    logoUrl,
-    screenshotUrls,
-    makerId: session.user.id,
-  });
+    await createProduct({
+      ...parsed.data,
+      logoUrl,
+      screenshotUrls,
+      makerId: session.user.id,
+    });
+  } catch {
+    return { errors: { form: "validation.formError" } };
+  }
 
   redirect(`/${locale}/submit?ok=1`);
 }
