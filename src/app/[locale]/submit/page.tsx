@@ -1,7 +1,11 @@
+import { CheckCircle2, LogIn } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { auth, signIn } from "@/auth";
+import { Link } from "@/i18n/navigation";
 import { listCategories } from "@/db/queries/categories";
 import { SubmitForm } from "@/components/SubmitForm";
+import { FadeUp } from "@/components/motion-primitives";
+import { Button } from "@/components/ui/button";
 
 export default async function SubmitPage({
   params,
@@ -12,38 +16,60 @@ export default async function SubmitPage({
 }) {
   const { locale } = await params;
   const { ok } = await searchParams;
-  const t = await getTranslations("submit");
+  const t = await getTranslations();
   const session = await auth();
 
   if (!session?.user) {
     return (
-      <div className="mx-auto max-w-xl p-6">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="mt-4 text-gray-600">{t("signInFirst")}</p>
-        <form
-          action={async () => {
-            "use server";
-            await signIn("google", { redirectTo: `/${locale}/submit` });
-          }}
-        >
-          <button
-            type="submit"
-            className="mt-4 rounded-md bg-black px-4 py-2 text-white"
-          >
-            {t("signInFirst")}
-          </button>
-        </form>
+      <div className="mx-auto max-w-xl px-4 py-8 sm:px-6">
+        <FadeUp>
+          <h1 className="font-heading text-2xl font-bold">
+            {t("submit.title")}
+          </h1>
+          <div className="mt-6 flex flex-col items-center gap-4 rounded-xl border border-dashed p-10 text-center">
+            <p className="text-sm text-muted-foreground">
+              {t("submit.signInFirst")}
+            </p>
+            <form
+              action={async () => {
+                "use server";
+                await signIn("google", { redirectTo: `/${locale}/submit` });
+              }}
+            >
+              <Button type="submit" className="cursor-pointer">
+                <LogIn className="size-4" aria-hidden="true" />
+                {t("nav.signIn")}
+              </Button>
+            </form>
+          </div>
+        </FadeUp>
       </div>
     );
   }
 
   if (ok === "1") {
     return (
-      <div className="mx-auto max-w-xl p-6">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="mt-4 rounded-md bg-green-50 p-4 text-green-800">
-          {t("success")}
-        </p>
+      <div className="mx-auto max-w-xl px-4 py-8 sm:px-6">
+        <FadeUp>
+          <h1 className="font-heading text-2xl font-bold">
+            {t("submit.title")}
+          </h1>
+          <div className="mt-6 flex flex-col items-center gap-4 rounded-xl border border-chart-3/40 bg-chart-3/10 p-10 text-center">
+            <CheckCircle2
+              className="size-8 text-chart-3"
+              aria-hidden="true"
+            />
+            <p className="text-sm">{t("submit.success")}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="cursor-pointer"
+              render={<Link href="/" />}
+            >
+              {t("app.name")} →
+            </Button>
+          </div>
+        </FadeUp>
       </div>
     );
   }
@@ -55,9 +81,11 @@ export default async function SubmitPage({
   }));
 
   return (
-    <div className="mx-auto max-w-xl p-6">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
-      <SubmitForm categories={catOptions} />
+    <div className="mx-auto max-w-xl px-4 py-8 sm:px-6">
+      <FadeUp>
+        <h1 className="font-heading text-2xl font-bold">{t("submit.title")}</h1>
+        <SubmitForm categories={catOptions} />
+      </FadeUp>
     </div>
   );
 }
