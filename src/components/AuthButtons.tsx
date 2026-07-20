@@ -1,5 +1,8 @@
-import { auth, signIn, signOut } from "@/auth";
 import { getLocale, getTranslations } from "next-intl/server";
+import { auth, signIn, signOut } from "@/auth";
+import { isAdmin } from "@/auth-helpers";
+import { Button } from "@/components/ui/button";
+import { UserMenu } from "./UserMenu";
 
 export async function AuthButtons() {
   const session = await auth();
@@ -8,22 +11,19 @@ export async function AuthButtons() {
 
   if (session?.user) {
     return (
-      <form
-        action={async () => {
+      <UserMenu
+        name={session.user.name ?? null}
+        image={session.user.image ?? null}
+        username={session.user.username}
+        isAdmin={isAdmin(session)}
+        signOutAction={async () => {
           "use server";
           await signOut({ redirectTo: `/${locale}` });
         }}
-      >
-        <span className="mr-2 text-sm">{session.user.name}</span>
-        <button
-          type="submit"
-          className="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-50"
-        >
-          {t("signOut")}
-        </button>
-      </form>
+      />
     );
   }
+
   return (
     <form
       action={async () => {
@@ -31,12 +31,14 @@ export async function AuthButtons() {
         await signIn("google", { redirectTo: `/${locale}` });
       }}
     >
-      <button
+      <Button
         type="submit"
-        className="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-50"
+        variant="outline"
+        size="sm"
+        className="cursor-pointer"
       >
         {t("signIn")}
-      </button>
+      </Button>
     </form>
   );
 }

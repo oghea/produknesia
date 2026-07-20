@@ -1,7 +1,21 @@
 {
-  "app": { "name": "Produknesia", "tagline": "Temukan produk Indonesia" },
-  "nav": { "submit": "Kirim", "signIn": "Masuk", "signOut": "Keluar", "languageLabel": "Bahasa" },
-  "home": { "popular": "Populer", "newest": "Terbaru" },
+  "app": {
+    "name": "Produknesia",
+    "tagline": "Temukan produk Indonesia"
+  },
+  "nav": {
+    "submit": "Kirim",
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "languageLabel": "Bahasa",
+    "theme": "Ganti tema",
+    "profile": "Profil saya",
+    "admin": "Admin"
+  },
+  "home": {
+    "popular": "Populer",
+    "newest": "Terbaru"
+  },
   "feed": {
     "empty": "Belum ada produk. Jadilah yang pertama meluncurkan!",
     "by": "oleh {name}",
@@ -66,8 +80,13 @@
     "submittedBy": "oleh {name}",
     "view": "Lihat"
   },
-  "vote": { "label": "Dukung", "voted": "Didukung" },
-  "categories": { "empty": "Belum ada produk di kategori ini." },
+  "vote": {
+    "label": "Dukung",
+    "voted": "Didukung"
+  },
+  "categories": {
+    "empty": "Belum ada produk di kategori ini."
+  },
   "search": {
     "placeholder": "Cari produk…",
     "title": "Hasil pencarian \"{q}\"",

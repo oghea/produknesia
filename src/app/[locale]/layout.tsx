@@ -2,6 +2,8 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { fontHeading, fontSans } from "@/lib/fonts";
+import { Providers } from "@/components/Providers";
 import { Header } from "@/components/Header";
 import "../globals.css";
 
@@ -21,11 +23,17 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      className={`${fontSans.variable} ${fontHeading.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <NextIntlClientProvider>
-          <Header />
-          <main>{children}</main>
+          <Providers>
+            <Header />
+            <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>
