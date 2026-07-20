@@ -1,3 +1,5 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Clock, ExternalLink, XCircle } from "lucide-react";
@@ -16,13 +18,32 @@ import { FadeUp } from "@/components/motion-primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+// Deduped across generateMetadata + the page render.
+const getDetail = cache(getProductBySlug);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const detail = await getDetail(slug);
+  // Non-approved products keep the app-default metadata (no name leak).
+  if (!detail || detail.product.status !== "approved") return {};
+  const { tagline } = pickLocalized(detail.product, locale);
+  return {
+    title: detail.product.name,
+    description: tagline ?? undefined,
+  };
+}
+
 export default async function ProductPage({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const detail = await getProductBySlug(slug);
+  const detail = await getDetail(slug);
   if (!detail) notFound();
 
   const { product, makerName, makerUsername, images, categories } = detail;

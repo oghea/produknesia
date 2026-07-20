@@ -1,4 +1,7 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Flame, PackageOpen, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { Link } from "@/i18n/navigation";
@@ -6,6 +9,22 @@ import { getCategoryBySlug, listProductsByCategory } from "@/db/queries/discover
 import { getVotedProductIds } from "@/db/queries/votes";
 import type { FeedSort } from "@/db/queries/products";
 import { ProductCard } from "@/components/ProductCard";
+import { StaggerItem, StaggerList } from "@/components/motion-primitives";
+import { cn } from "@/lib/utils";
+
+// Deduped across generateMetadata + the page render.
+const getCategory = cache(getCategoryBySlug);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const category = await getCategory(slug);
+  if (!category) return {};
+  return { title: locale === "id" ? category.nameId : category.nameEn };
+}
 
 export default async function CategoryPage({
   params,
@@ -18,7 +37,7 @@ export default async function CategoryPage({
   const { sort: sortParam } = await searchParams;
   const sort: FeedSort = sortParam === "newest" ? "newest" : "popular";
 
-  const category = await getCategoryBySlug(slug);
+  const category = await getCategory(slug);
   if (!category) notFound();
 
   const t = await getTranslations();
@@ -29,14 +48,17 @@ export default async function CategoryPage({
     : new Set<string>();
 
   const tabCls = (active: boolean) =>
-    `rounded-md px-3 py-1 text-sm font-medium ${
-      active ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100"
-    }`;
+    cn(
+      "flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+      active
+        ? "bg-primary text-primary-foreground shadow-xs"
+        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+    );
 
   return (
-    <div className="mx-auto max-w-2xl p-6">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">
+        <h1 className="font-heading text-2xl font-bold">
           {locale === "id" ? category.nameId : category.nameEn}
         </h1>
         <nav className="flex gap-1">
@@ -44,32 +66,42 @@ export default async function CategoryPage({
             href={`/categories/${slug}?sort=popular`}
             className={tabCls(sort === "popular")}
           >
+            <Flame className="size-4" aria-hidden="true" />
             {t("home.popular")}
           </Link>
           <Link
             href={`/categories/${slug}?sort=newest`}
             className={tabCls(sort === "newest")}
           >
+            <Sparkles className="size-4" aria-hidden="true" />
             {t("home.newest")}
           </Link>
         </nav>
       </div>
 
-      <div className="mt-6 flex flex-col gap-3">
-        {items.length === 0 && (
-          <p className="rounded-md bg-gray-50 p-6 text-center text-gray-500">
+      {items.length === 0 ? (
+        <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
+          <PackageOpen
+            className="size-8 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <p className="text-sm text-muted-foreground">
             {t("categories.empty")}
           </p>
-        )}
-        {items.map((item) => (
-          <ProductCard
-            key={item.id}
-            item={item}
-            locale={locale}
-            viewerVoted={votedIds.has(item.id)}
-          />
-        ))}
-      </div>
+        </div>
+      ) : (
+        <StaggerList className="mt-6 flex flex-col gap-3">
+          {items.map((item) => (
+            <StaggerItem key={item.id}>
+              <ProductCard
+                item={item}
+                locale={locale}
+                viewerVoted={votedIds.has(item.id)}
+              />
+            </StaggerItem>
+          ))}
+        </StaggerList>
+      )}
     </div>
   );
 }
