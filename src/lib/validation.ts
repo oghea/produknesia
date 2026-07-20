@@ -35,6 +35,31 @@ export const productInputSchema = z
 
 export type ProductInput = z.infer<typeof productInputSchema>;
 
+export const commentInputSchema = z.object({
+  body: z
+    .string("validation.commentRequired")
+    .trim()
+    .min(1, "validation.commentRequired")
+    .max(2000, "validation.commentTooLong"),
+});
+
+export function parseCommentForm(
+  formData: FormData,
+):
+  | { ok: true; data: { body: string } }
+  | { ok: false; errors: Record<string, string> } {
+  const result = commentInputSchema.safeParse({
+    body: formData.get("body") ?? undefined,
+  });
+  if (result.success) return { ok: true, data: result.data };
+  const errors: Record<string, string> = {};
+  for (const issue of result.error.issues) {
+    const key = String(issue.path[0] ?? "form");
+    if (!(key in errors)) errors[key] = issue.message;
+  }
+  return { ok: false, errors };
+}
+
 export function parseProductForm(
   formData: FormData,
 ):

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseProductForm } from "./validation";
+import { parseProductForm, parseCommentForm } from "./validation";
 
 function form(entries: Record<string, string | string[]>): FormData {
   const fd = new FormData();
@@ -76,5 +76,37 @@ describe("parseProductForm", () => {
     for (const url of ["https://produknesia.id", "http://localhost:3000/x"]) {
       expect(parseProductForm(form({ ...valid, websiteUrl: url })).ok).toBe(true);
     }
+  });
+});
+
+describe("parseCommentForm", () => {
+  it("accepts a normal body and trims it", () => {
+    const fd = new FormData();
+    fd.append("body", "  Mantap!  ");
+    const r = parseCommentForm(fd);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data.body).toBe("Mantap!");
+  });
+
+  it("rejects an empty body", () => {
+    const fd = new FormData();
+    fd.append("body", "   ");
+    const r = parseCommentForm(fd);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.body).toBe("validation.commentRequired");
+  });
+
+  it("rejects a missing body", () => {
+    const r = parseCommentForm(new FormData());
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.body).toBe("validation.commentRequired");
+  });
+
+  it("rejects an over-long body", () => {
+    const fd = new FormData();
+    fd.append("body", "x".repeat(2001));
+    const r = parseCommentForm(fd);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.body).toBe("validation.commentTooLong");
   });
 });
