@@ -1,5 +1,35 @@
 {
   "app": { "name": "Produknesia", "tagline": "Discover Indonesian products" },
   "nav": { "submit": "Submit", "signIn": "Sign in", "signOut": "Sign out", "languageLabel": "Language" },
-  "home": { "popular": "Popular", "newest": "Newest" }
+  "home": { "popular": "Popular", "newest": "Newest" },
+  "submit": {
+    "title": "Submit a product",
+    "signInFirst": "Sign in to submit your product.",
+    "name": "Product name",
+    "taglineId": "Tagline (Indonesian)",
+    "taglineEn": "Tagline (English)",
+    "taglineHint": "Fill at least one tagline.",
+    "descriptionId": "Description (Indonesian, markdown)",
+    "descriptionEn": "Description (English, markdown)",
+    "website": "Website URL",
+    "categories": "Categories (up to 3)",
+    "logo": "Logo",
+    "screenshots": "Screenshots (up to 4)",
+    "send": "Submit for review",
+    "success": "Submitted! Your product is now waiting for review."
+  },
+  "validation": {
+    "nameRequired": "Name is required.",
+    "nameTooShort": "Name must be at least 3 characters.",
+    "nameTooLong": "Name is too long.",
+    "tooLong": "This field is too long.",
+    "taglineRequired": "Fill in at least one tagline.",
+    "urlInvalid": "Enter a valid URL (https://...).",
+    "categoryRequired": "Pick at least one category.",
+    "categoryTooMany": "Pick at most 3 categories.",
+    "imageType": "Images must be JPEG, PNG, or WebP.",
+    "imageSize": "Images must be 4 MB or smaller.",
+    "screenshotsTooMany": "At most 4 screenshots.",
+    "formError": "Something went wrong. Check the fields and try again."
+  }
 }
