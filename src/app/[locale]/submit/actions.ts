@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { parseProductForm } from "@/lib/validation";
 import { putImage, validateImage } from "@/lib/storage";
 import { createProduct } from "@/db/queries/products";
+import { localePath } from "@/i18n/locale-path";
 
 export type SubmitState = { errors: Record<string, string> };
 
@@ -21,7 +22,7 @@ export async function submitProduct(
 ): Promise<SubmitState> {
   const session = await auth();
   const locale = await getLocale();
-  if (!session?.user) redirect(`/${locale}/submit`);
+  if (!session?.user) redirect(localePath(locale, "/submit"));
 
   const parsed = parseProductForm(formData);
   if (!parsed.ok) return { errors: parsed.errors };
@@ -58,5 +59,5 @@ export async function submitProduct(
     return { errors: { form: "validation.formError" } };
   }
 
-  redirect(`/${locale}/submit?ok=1`);
+  redirect(localePath(locale, "/submit?ok=1"));
 }

@@ -6,6 +6,7 @@ import { auth, signIn } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
 import { parseCommentForm } from "@/lib/validation";
 import { createComment, softDeleteComment } from "@/db/queries/comments";
+import { localePath } from "@/i18n/locale-path";
 
 export type CommentState = { ok: boolean; errors: Record<string, string> };
 
@@ -17,7 +18,7 @@ export async function addCommentAction(
   const slug = String(formData.get("slug") ?? "");
   if (!session?.user) {
     const locale = await getLocale();
-    await signIn("google", { redirectTo: `/${locale}/products/${slug}` });
+    await signIn("google", { redirectTo: localePath(locale, `/products/${slug}`) });
     return { ok: false, errors: {} }; // unreachable — signIn redirects
   }
 

@@ -6,6 +6,7 @@ import { listCategories } from "@/db/queries/categories";
 import { SubmitForm } from "@/components/SubmitForm";
 import { FadeUp } from "@/components/motion-primitives";
 import { Button } from "@/components/ui/button";
+import { localePath } from "@/i18n/locale-path";
 
 export default async function SubmitPage({
   params,
@@ -33,7 +34,7 @@ export default async function SubmitPage({
             <form
               action={async () => {
                 "use server";
-                await signIn("google", { redirectTo: `/${locale}/submit` });
+                await signIn("google", { redirectTo: localePath(locale, "/submit") });
               }}
             >
               <Button type="submit" className="cursor-pointer">

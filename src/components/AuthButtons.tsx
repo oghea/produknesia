@@ -3,6 +3,7 @@ import { auth, signIn, signOut } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "./UserMenu";
+import { localePath } from "@/i18n/locale-path";
 
 export async function AuthButtons() {
   const session = await auth();
@@ -18,7 +19,7 @@ export async function AuthButtons() {
         isAdmin={isAdmin(session)}
         signOutAction={async () => {
           "use server";
-          await signOut({ redirectTo: `/${locale}` });
+          await signOut({ redirectTo: localePath(locale, "/") });
         }}
       />
     );
@@ -28,7 +29,7 @@ export async function AuthButtons() {
     <form
       action={async () => {
         "use server";
-        await signIn("google", { redirectTo: `/${locale}` });
+        await signIn("google", { redirectTo: localePath(locale, "/") });
       }}
     >
       <Button

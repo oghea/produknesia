@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { approveAction, rejectAction } from "./actions";
+import { localePath } from "@/i18n/locale-path";
 
 export default async function AdminPage({
   params,
@@ -18,7 +19,7 @@ export default async function AdminPage({
 }) {
   const { locale } = await params;
   const session = await auth();
-  if (!isAdmin(session)) redirect(`/${locale}`);
+  if (!isAdmin(session)) redirect(localePath(locale, "/"));
 
   const t = await getTranslations("admin");
   const pending = await listPending();
