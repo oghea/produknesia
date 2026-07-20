@@ -8,6 +8,7 @@ import {
   sessions,
   verificationTokens,
 } from "@/db/schema";
+import { assignUsername } from "@/db/queries/users";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
@@ -23,6 +24,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.id = user.id;
       session.user.role = user.role;
       return session;
+    },
+  },
+  events: {
+    async createUser({ user }) {
+      if (user.id) await assignUsername(user.id);
     },
   },
 });
