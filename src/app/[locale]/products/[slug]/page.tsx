@@ -1,0 +1,106 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import ReactMarkdown from "react-markdown";
+import { auth } from "@/auth";
+import { isAdmin } from "@/auth-helpers";
+import { getProductBySlug } from "@/db/queries/products";
+import { pickLocalized } from "@/lib/locale-content";
+
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  const detail = await getProductBySlug(slug);
+  if (!detail) notFound();
+
+  const { product, makerName, images, categories } = detail;
+  const session = await auth();
+  const viewerIsMaker = session?.user?.id === product.makerId;
+  const viewerIsAdmin = isAdmin(session);
+
+  if (product.status !== "approved" && !viewerIsMaker && !viewerIsAdmin) {
+    notFound();
+  }
+
+  const t = await getTranslations("product");
+  const { tagline, description } = pickLocalized(product, locale);
+
+  return (
+    <article className="mx-auto max-w-2xl p-6">
+      {product.status === "pending" && (
+        <p className="mb-4 rounded-md bg-yellow-50 p-3 text-sm text-yellow-800">
+          {t("pendingBanner")}
+        </p>
+      )}
+      {product.status === "rejected" && (
+        <p className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
+          {t("rejectedBanner", {
+            reason: product.rejectionReason ?? t("noReason"),
+          })}
+        </p>
+      )}
+
+      <div className="flex items-center gap-4">
+        {product.logoUrl && (
+          <Image
+            src={product.logoUrl}
+            alt=""
+            width={72}
+            height={72}
+            className="h-18 w-18 rounded-lg object-cover"
+          />
+        )}
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold">{product.name}</h1>
+          {tagline && <p className="text-gray-600">{tagline}</p>}
+          {makerName && (
+            <p className="text-sm text-gray-400">{t("by", { name: makerName })}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        {categories.map((c) => (
+          <span
+            key={c.slug}
+            className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700"
+          >
+            {locale === "id" ? c.nameId : c.nameEn}
+          </span>
+        ))}
+        <a
+          href={product.websiteUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-auto rounded-md bg-black px-4 py-2 text-sm font-medium text-white"
+        >
+          {t("visit")}
+        </a>
+      </div>
+
+      {description && (
+        <div className="prose prose-sm mt-6 max-w-none">
+          <ReactMarkdown>{description}</ReactMarkdown>
+        </div>
+      )}
+
+      {images.length > 0 && (
+        <div className="mt-6 flex flex-col gap-4">
+          {images.map((img) => (
+            <Image
+              key={img.url}
+              src={img.url}
+              alt=""
+              width={1280}
+              height={720}
+              className="h-auto w-full rounded-lg border border-gray-200"
+            />
+          ))}
+        </div>
+      )}
+    </article>
+  );
+}

@@ -36,5 +36,12 @@
     "imageSize": "Ukuran gambar maksimal 4 MB.",
     "screenshotsTooMany": "Maksimal 4 tangkapan layar.",
     "formError": "Ada yang salah. Periksa kolom lalu coba lagi."
+  },
+  "product": {
+    "visit": "Kunjungi situs",
+    "pendingBanner": "Produk ini sedang menunggu peninjauan dan hanya terlihat olehmu.",
+    "rejectedBanner": "Produk ini ditolak. Alasan: {reason}",
+    "noReason": "tidak diberikan",
+    "by": "oleh {name}"
   }
 }

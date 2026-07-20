@@ -36,5 +36,12 @@
     "imageSize": "Images must be 4 MB or smaller.",
     "screenshotsTooMany": "At most 4 screenshots.",
     "formError": "Something went wrong. Check the fields and try again."
+  },
+  "product": {
+    "visit": "Visit website",
+    "pendingBanner": "This product is waiting for review and is only visible to you.",
+    "rejectedBanner": "This product was rejected. Reason: {reason}",
+    "noReason": "not provided",
+    "by": "by {name}"
   }
 }
