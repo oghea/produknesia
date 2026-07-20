@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Clock, ExternalLink, XCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import { auth } from "@/auth";
@@ -11,6 +12,9 @@ import { listComments } from "@/db/queries/comments";
 import { pickLocalized } from "@/lib/locale-content";
 import { VoteButton } from "@/components/VoteButton";
 import { CommentSection } from "@/components/CommentSection";
+import { FadeUp } from "@/components/motion-primitives";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default async function ProductPage({
   params,
@@ -41,85 +45,101 @@ export default async function ProductPage({
   const { tagline, description } = pickLocalized(product, locale);
 
   return (
-    <article className="mx-auto max-w-2xl p-6">
+    <article className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
       {product.status === "pending" && (
-        <p className="mb-4 rounded-md bg-yellow-50 p-3 text-sm text-yellow-800">
+        <p className="mb-6 flex items-center gap-2 rounded-lg border border-chart-2/40 bg-accent p-3 text-sm text-accent-foreground">
+          <Clock className="size-4 shrink-0" aria-hidden="true" />
           {t("pendingBanner")}
         </p>
       )}
       {product.status === "rejected" && (
-        <p className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
+        <p className="mb-6 flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <XCircle className="size-4 shrink-0" aria-hidden="true" />
           {t("rejectedBanner", {
             reason: product.rejectionReason ?? t("noReason"),
           })}
         </p>
       )}
 
-      <div className="flex items-center gap-4">
-        {product.logoUrl && (
-          <Image
-            src={product.logoUrl}
-            alt=""
-            width={72}
-            height={72}
-            className="h-18 w-18 rounded-lg object-cover"
-          />
-        )}
-        <div className="min-w-0">
-          <h1 className="text-2xl font-bold">{product.name}</h1>
-          {tagline && <p className="text-gray-600">{tagline}</p>}
-          {makerName && (
-            <p className="text-sm text-gray-400">
-              {makerUsername ? (
-                <Link href={`/u/${makerUsername}`} className="hover:underline">
-                  {t("by", { name: makerName })}
-                </Link>
-              ) : (
-                t("by", { name: makerName })
-              )}
-            </p>
+      <FadeUp>
+        <div className="flex items-center gap-4">
+          {product.logoUrl && (
+            <Image
+              src={product.logoUrl}
+              alt=""
+              width={72}
+              height={72}
+              className="size-18 shrink-0 rounded-2xl border object-cover"
+            />
+          )}
+          <div className="min-w-0">
+            <h1 className="font-heading text-2xl font-bold sm:text-3xl">
+              {product.name}
+            </h1>
+            {tagline && <p className="text-muted-foreground">{tagline}</p>}
+            {makerName && (
+              <p className="mt-0.5 text-sm text-muted-foreground/80">
+                {makerUsername ? (
+                  <Link
+                    href={`/u/${makerUsername}`}
+                    className="cursor-pointer transition-colors hover:text-primary hover:underline"
+                  >
+                    {t("by", { name: makerName })}
+                  </Link>
+                ) : (
+                  t("by", { name: makerName })
+                )}
+              </p>
+            )}
+          </div>
+          {product.status === "approved" && (
+            <div className="ml-auto shrink-0">
+              <VoteButton
+                productId={product.id}
+                initialCount={product.voteCount}
+                initialVoted={votedIds.has(product.id)}
+                size="lg"
+              />
+            </div>
           )}
         </div>
-        {product.status === "approved" && (
-          <div className="ml-auto">
-            <VoteButton
-              productId={product.id}
-              initialCount={product.voteCount}
-              initialVoted={votedIds.has(product.id)}
-              size="lg"
-            />
-          </div>
-        )}
-      </div>
+      </FadeUp>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-5 flex flex-wrap items-center gap-1.5">
         {categories.map((c) => (
-          <Link
+          <Badge
             key={c.slug}
-            href={`/categories/${c.slug}`}
-            className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700 hover:bg-gray-200"
+            variant="secondary"
+            className="cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground"
+            render={<Link href={`/categories/${c.slug}`} />}
           >
             {locale === "id" ? c.nameId : c.nameEn}
-          </Link>
+          </Badge>
         ))}
-        <a
-          href={product.websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ml-auto rounded-md bg-black px-4 py-2 text-sm font-medium text-white"
+        <Button
+          size="sm"
+          className="ml-auto cursor-pointer"
+          render={
+            <a
+              href={product.websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+          }
         >
           {t("visit")}
-        </a>
+          <ExternalLink className="size-3.5" aria-hidden="true" />
+        </Button>
       </div>
 
       {description && (
-        <div className="prose prose-sm mt-6 max-w-none">
+        <div className="prose prose-sm mt-8 max-w-none dark:prose-invert">
           <ReactMarkdown>{description}</ReactMarkdown>
         </div>
       )}
 
       {images.length > 0 && (
-        <div className="mt-6 flex flex-col gap-4">
+        <div className="mt-8 flex flex-col gap-4">
           {images.map((img) => (
             <Image
               key={img.url}
@@ -127,7 +147,7 @@ export default async function ProductPage({
               alt=""
               width={1280}
               height={720}
-              className="h-auto w-full rounded-lg border border-gray-200"
+              className="h-auto w-full rounded-xl border shadow-xs"
             />
           ))}
         </div>
