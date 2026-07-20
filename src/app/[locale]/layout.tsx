@@ -40,7 +40,6 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       className={`${fontSans.variable} ${fontHeading.variable}`}
-      suppressHydrationWarning
     >
       <body>
         <NextIntlClientProvider>

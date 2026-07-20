@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { AuthButtons } from "./AuthButtons";
 import { SearchForm } from "./SearchForm";
-import { ThemeToggle } from "./ThemeToggle";
 
 export async function Header() {
   const t = await getTranslations();
@@ -42,7 +41,6 @@ export async function Header() {
         <div className="hidden sm:block">
           <LanguageSwitcher />
         </div>
-        <ThemeToggle />
         <AuthButtons />
       </div>
     </header>

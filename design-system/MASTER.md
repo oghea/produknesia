@@ -2,7 +2,7 @@
 
 **Direction:** Warm Indonesian — light-first, warm off-white base, bold red primary
 (nod to merah-putih), amber accents. Clean Product Hunt density with local
-personality. Dark mode fully supported (next-themes + shadcn CSS variables).
+personality. **Light mode only** (dark mode removed by product decision 2026-07-20).
 
 ## Foundations
 
@@ -29,8 +29,8 @@ personality. Dark mode fully supported (next-themes + shadcn CSS variables).
 | `--muted` | warm stone tint | secondary surfaces |
 | `--border` | visible warm gray (≥ gray-200 weight) | all borders |
 
-Dark mode mirrors with a deep warm charcoal base and a slightly brighter red.
-Contrast: body text ≥4.5:1 in BOTH modes.
+Contrast: body text ≥4.5:1. Leftover `dark:` utilities in shadcn components
+are inert — the class-based `@custom-variant dark` is kept but never activated.
 
 ## Rules (from ui-ux-pro-max, binding)
 
