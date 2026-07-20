@@ -21,7 +21,8 @@ export const productInputSchema = z
       .string("validation.urlInvalid")
       .trim()
       .url("validation.urlInvalid")
-      .max(300, "validation.tooLong"),
+      .max(300, "validation.tooLong")
+      .refine((v) => /^https?:\/\//i.test(v), "validation.urlInvalid"),
     categoryIds: z
       .array(z.string())
       .min(1, "validation.categoryRequired")

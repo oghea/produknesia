@@ -35,6 +35,7 @@
     "imageType": "Gambar harus JPEG, PNG, atau WebP.",
     "imageSize": "Ukuran gambar maksimal 4 MB.",
     "screenshotsTooMany": "Maksimal 4 tangkapan layar.",
+    "logoSingle": "Hanya satu berkas logo yang diperbolehkan.",
     "formError": "Ada yang salah. Periksa kolom lalu coba lagi."
   },
   "product": {

@@ -58,4 +58,23 @@ describe("parseProductForm", () => {
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.errors.categoryIds).toBe("validation.categoryTooMany");
   });
+
+  it("rejects non-http(s) URL schemes", () => {
+    for (const url of [
+      "javascript:alert(1)",
+      "data:text/html,<script>1</script>",
+      "vbscript:x",
+      "ftp://example.com/x",
+    ]) {
+      const r = parseProductForm(form({ ...valid, websiteUrl: url }));
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.errors.websiteUrl).toBe("validation.urlInvalid");
+    }
+  });
+
+  it("accepts http and https URLs", () => {
+    for (const url of ["https://produknesia.id", "http://localhost:3000/x"]) {
+      expect(parseProductForm(form({ ...valid, websiteUrl: url })).ok).toBe(true);
+    }
+  });
 });

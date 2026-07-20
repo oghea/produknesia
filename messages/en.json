@@ -35,6 +35,7 @@
     "imageType": "Images must be JPEG, PNG, or WebP.",
     "imageSize": "Images must be 4 MB or smaller.",
     "screenshotsTooMany": "At most 4 screenshots.",
+    "logoSingle": "Only one logo file is allowed.",
     "formError": "Something went wrong. Check the fields and try again."
   },
   "product": {

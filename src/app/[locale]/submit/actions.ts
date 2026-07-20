@@ -28,12 +28,19 @@ export async function submitProduct(
 
   const logoFiles = pickFiles(formData, "logo");
   const screenshotFiles = pickFiles(formData, "screenshots");
+  if (logoFiles.length > 1) {
+    return { errors: { logo: "validation.logoSingle" } };
+  }
   if (screenshotFiles.length > 4) {
     return { errors: { screenshots: "validation.screenshotsTooMany" } };
   }
-  for (const f of [...logoFiles, ...screenshotFiles]) {
-    const err = validateImage(f);
-    if (err) return { errors: { [f === logoFiles[0] ? "logo" : "screenshots"]: err } };
+  const toValidate: Array<{ field: "logo" | "screenshots"; file: File }> = [
+    ...logoFiles.map((file) => ({ field: "logo" as const, file })),
+    ...screenshotFiles.map((file) => ({ field: "screenshots" as const, file })),
+  ];
+  for (const { field, file } of toValidate) {
+    const err = validateImage(file);
+    if (err) return { errors: { [field]: err } };
   }
 
   try {
