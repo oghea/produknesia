@@ -43,5 +43,14 @@
     "rejectedBanner": "This product was rejected. Reason: {reason}",
     "noReason": "not provided",
     "by": "by {name}"
+  },
+  "admin": {
+    "title": "Approval queue",
+    "empty": "No pending products. 🎉",
+    "approve": "Approve",
+    "reject": "Reject",
+    "reasonPlaceholder": "Rejection reason (optional)",
+    "submittedBy": "by {name}",
+    "view": "View"
   }
 }

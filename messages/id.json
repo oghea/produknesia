@@ -43,5 +43,14 @@
     "rejectedBanner": "Produk ini ditolak. Alasan: {reason}",
     "noReason": "tidak diberikan",
     "by": "oleh {name}"
+  },
+  "admin": {
+    "title": "Antrean peninjauan",
+    "empty": "Tidak ada produk menunggu. 🎉",
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "reasonPlaceholder": "Alasan penolakan (opsional)",
+    "submittedBy": "oleh {name}",
+    "view": "Lihat"
   }
 }
