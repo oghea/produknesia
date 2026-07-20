@@ -66,5 +66,6 @@
     "submittedBy": "oleh {name}",
     "view": "Lihat"
   },
-  "vote": { "label": "Dukung", "voted": "Didukung" }
+  "vote": { "label": "Dukung", "voted": "Didukung" },
+  "categories": { "empty": "Belum ada produk di kategori ini." }
 }

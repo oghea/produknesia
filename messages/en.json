@@ -66,5 +66,6 @@
     "submittedBy": "by {name}",
     "view": "View"
   },
-  "vote": { "label": "Upvote", "voted": "Upvoted" }
+  "vote": { "label": "Upvote", "voted": "Upvoted" },
+  "categories": { "empty": "No products in this category yet." }
 }

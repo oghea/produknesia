@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import { auth } from "@/auth";
+import { Link } from "@/i18n/navigation";
 import { isAdmin } from "@/auth-helpers";
 import { getProductBySlug } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
@@ -85,12 +86,13 @@ export default async function ProductPage({
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         {categories.map((c) => (
-          <span
+          <Link
             key={c.slug}
-            className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700"
+            href={`/categories/${c.slug}`}
+            className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700 hover:bg-gray-200"
           >
             {locale === "id" ? c.nameId : c.nameEn}
-          </span>
+          </Link>
         ))}
         <a
           href={product.websiteUrl}
