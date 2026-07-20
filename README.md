@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Produknesia
 
-## Getting Started
+An Indonesia-focused Product Hunt: makers launch products, the community
+upvotes and discusses them. Bilingual (Bahasa Indonesia / English).
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Next.js (App Router) · Neon Postgres + Drizzle ORM · Auth.js v5 (Google) ·
+next-intl · Vercel Blob · Tailwind CSS · Vitest
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. `pnpm install`
+2. Copy `.env.example` to `.env.local` and fill in:
+   - `DATABASE_URL` — Neon connection string
+   - `AUTH_SECRET` — `npx auth secret`
+   - `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` — Google OAuth client
+     (redirect URI: `http://localhost:3000/api/auth/callback/google`;
+     add your production domain's equivalent when deploying)
+   - `BLOB_READ_WRITE_TOKEN` — optional in dev (falls back to `public/uploads/`)
+3. `pnpm db:migrate` — apply migrations
+4. `pnpm db:seed` — seed categories (idempotent)
+5. `pnpm dev`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Admin bootstrap
 
-## Learn More
+Sign in once, then promote yourself in the Neon SQL console:
 
-To learn more about Next.js, take a look at the following resources:
+    update users set role = 'admin' where email = 'you@example.com';
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `pnpm dev` / `pnpm build` / `pnpm start`
+- `pnpm test` / `pnpm test:watch`
+- `pnpm db:generate` / `pnpm db:migrate` / `pnpm db:seed`

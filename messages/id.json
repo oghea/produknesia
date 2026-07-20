@@ -1,5 +1,57 @@
 {
   "app": { "name": "Produknesia", "tagline": "Temukan produk Indonesia" },
   "nav": { "submit": "Kirim", "signIn": "Masuk", "signOut": "Keluar", "languageLabel": "Bahasa" },
-  "home": { "popular": "Populer", "newest": "Terbaru" }
+  "home": { "popular": "Populer", "newest": "Terbaru" },
+  "feed": {
+    "empty": "Belum ada produk. Jadilah yang pertama meluncurkan!",
+    "by": "oleh {name}",
+    "votes": "{count} suara"
+  },
+  "submit": {
+    "title": "Kirim produk",
+    "signInFirst": "Masuk dulu untuk mengirim produkmu.",
+    "name": "Nama produk",
+    "taglineId": "Tagline (Bahasa Indonesia)",
+    "taglineEn": "Tagline (Bahasa Inggris)",
+    "taglineHint": "Isi minimal satu tagline.",
+    "descriptionId": "Deskripsi (Bahasa Indonesia, markdown)",
+    "descriptionEn": "Deskripsi (Bahasa Inggris, markdown)",
+    "website": "URL situs",
+    "categories": "Kategori (maksimal 3)",
+    "logo": "Logo",
+    "screenshots": "Tangkapan layar (maksimal 4)",
+    "send": "Kirim untuk ditinjau",
+    "success": "Terkirim! Produkmu sedang menunggu peninjauan."
+  },
+  "validation": {
+    "nameRequired": "Nama wajib diisi.",
+    "nameTooShort": "Nama minimal 3 karakter.",
+    "nameTooLong": "Nama terlalu panjang.",
+    "tooLong": "Kolom ini terlalu panjang.",
+    "taglineRequired": "Isi minimal satu tagline.",
+    "urlInvalid": "Masukkan URL yang valid (https://...).",
+    "categoryRequired": "Pilih minimal satu kategori.",
+    "categoryTooMany": "Pilih maksimal 3 kategori.",
+    "imageType": "Gambar harus JPEG, PNG, atau WebP.",
+    "imageSize": "Ukuran gambar maksimal 4 MB.",
+    "screenshotsTooMany": "Maksimal 4 tangkapan layar.",
+    "logoSingle": "Hanya satu berkas logo yang diperbolehkan.",
+    "formError": "Ada yang salah. Periksa kolom lalu coba lagi."
+  },
+  "product": {
+    "visit": "Kunjungi situs",
+    "pendingBanner": "Produk ini sedang menunggu peninjauan dan hanya terlihat olehmu.",
+    "rejectedBanner": "Produk ini ditolak. Alasan: {reason}",
+    "noReason": "tidak diberikan",
+    "by": "oleh {name}"
+  },
+  "admin": {
+    "title": "Antrean peninjauan",
+    "empty": "Tidak ada produk menunggu. 🎉",
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "reasonPlaceholder": "Alasan penolakan (opsional)",
+    "submittedBy": "oleh {name}",
+    "view": "Lihat"
+  }
 }
