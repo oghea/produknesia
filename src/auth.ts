@@ -28,7 +28,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   events: {
     async createUser({ user }) {
-      if (user.id) await assignUsername(user.id);
+      if (!user.id) return;
+      try {
+        await assignUsername(user.id);
+      } catch (error) {
+        // Username assignment must never break sign-up; the
+        // db:backfill-usernames script covers any missed rows.
+        console.error("assignUsername failed during sign-up:", error);
+      }
     },
   },
 });
