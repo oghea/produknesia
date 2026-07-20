@@ -67,5 +67,11 @@
     "view": "Lihat"
   },
   "vote": { "label": "Dukung", "voted": "Didukung" },
-  "categories": { "empty": "Belum ada produk di kategori ini." }
+  "categories": { "empty": "Belum ada produk di kategori ini." },
+  "search": {
+    "placeholder": "Cari produk…",
+    "title": "Hasil pencarian \"{q}\"",
+    "empty": "Produk tidak ditemukan.",
+    "tooShort": "Ketik minimal 2 karakter untuk mencari."
+  }
 }
