@@ -66,5 +66,21 @@
     "submittedBy": "by {name}",
     "view": "View"
   },
-  "vote": { "label": "Upvote", "voted": "Upvoted" }
+  "vote": { "label": "Upvote", "voted": "Upvoted" },
+  "categories": { "empty": "No products in this category yet." },
+  "search": {
+    "placeholder": "Search products…",
+    "title": "Search results for \"{q}\"",
+    "empty": "No products found.",
+    "tooShort": "Type at least 2 characters to search."
+  },
+  "profile": {
+    "joined": "Joined {date}",
+    "submissions": "Products",
+    "upvoted": "Upvoted",
+    "noSubmissions": "No products launched yet.",
+    "noUpvotes": "No upvotes yet.",
+    "statusPending": "Under review",
+    "statusRejected": "Rejected"
+  }
 }

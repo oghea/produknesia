@@ -66,5 +66,21 @@
     "submittedBy": "oleh {name}",
     "view": "Lihat"
   },
-  "vote": { "label": "Dukung", "voted": "Didukung" }
+  "vote": { "label": "Dukung", "voted": "Didukung" },
+  "categories": { "empty": "Belum ada produk di kategori ini." },
+  "search": {
+    "placeholder": "Cari produk…",
+    "title": "Hasil pencarian \"{q}\"",
+    "empty": "Produk tidak ditemukan.",
+    "tooShort": "Ketik minimal 2 karakter untuk mencari."
+  },
+  "profile": {
+    "joined": "Bergabung {date}",
+    "submissions": "Produk",
+    "upvoted": "Didukung",
+    "noSubmissions": "Belum ada produk yang diluncurkan.",
+    "noUpvotes": "Belum ada dukungan.",
+    "statusPending": "Sedang ditinjau",
+    "statusRejected": "Ditolak"
+  }
 }

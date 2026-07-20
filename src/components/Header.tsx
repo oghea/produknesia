@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { AuthButtons } from "./AuthButtons";
+import { SearchForm } from "./SearchForm";
 
 export async function Header() {
   const t = await getTranslations();
@@ -11,6 +12,7 @@ export async function Header() {
         {t("app.name")}
       </Link>
       <div className="flex-1" />
+      <SearchForm />
       <Link href="/submit" className="text-sm text-gray-700 hover:text-black">
         {t("nav.submit")}
       </Link>

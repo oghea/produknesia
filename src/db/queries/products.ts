@@ -76,7 +76,7 @@ export async function createProduct(data: NewProductData, dbc: DBClient = db) {
   });
 }
 
-const feedColumns = {
+export const feedColumns = {
   id: products.id,
   slug: products.slug,
   name: products.name,
@@ -122,6 +122,7 @@ export async function listFeed(
 export type ProductDetail = {
   product: typeof products.$inferSelect;
   makerName: string | null;
+  makerUsername: string | null;
   images: { url: string; sortOrder: number }[];
   categories: { slug: string; nameId: string; nameEn: string }[];
 };
@@ -131,13 +132,17 @@ export async function getProductBySlug(
   dbc: DBClient = db,
 ): Promise<ProductDetail | null> {
   const rows = await dbc
-    .select({ product: products, makerName: users.name })
+    .select({
+      product: products,
+      makerName: users.name,
+      makerUsername: users.username,
+    })
     .from(products)
     .innerJoin(users, eq(products.makerId, users.id))
     .where(eq(products.slug, slug))
     .limit(1);
   if (rows.length === 0) return null;
-  const { product, makerName } = rows[0];
+  const { product, makerName, makerUsername } = rows[0];
 
   const images = await dbc
     .select({ url: productImages.url, sortOrder: productImages.sortOrder })
@@ -156,7 +161,7 @@ export async function getProductBySlug(
     .where(eq(productCategories.productId, product.id))
     .orderBy(asc(categories.slug));
 
-  return { product, makerName, images, categories: cats };
+  return { product, makerName, makerUsername, images, categories: cats };
 }
 
 export type PendingItem = {
