@@ -75,6 +75,7 @@ export function UserMenu({
         <form action={signOutAction}>
           <DropdownMenuItem
             closeOnClick={false}
+            nativeButton
             className="w-full cursor-pointer"
             render={<button type="submit" />}
           >
