@@ -1,4 +1,4 @@
-import { asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import type { DBClient } from "@/db/types";
 import { comments, products, users } from "@/db/schema";
@@ -107,10 +107,14 @@ export async function softDeleteComment(
     if (!c || c.isDeleted) return false;
     if (c.userId !== requesterId && !requesterIsAdmin) return false;
 
-    await tx
+    const flipped = await tx
       .update(comments)
       .set({ isDeleted: true })
-      .where(eq(comments.id, commentId));
+      .where(and(eq(comments.id, commentId), eq(comments.isDeleted, false)))
+      .returning({ id: comments.id });
+    // Concurrent-delete drift guard: only decrement if THIS call flipped the row.
+    if (flipped.length === 0) return false;
+
     await tx
       .update(products)
       .set({ commentCount: sql`${products.commentCount} - 1` })
