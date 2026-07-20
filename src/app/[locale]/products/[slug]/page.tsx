@@ -66,14 +66,16 @@ export default async function ProductPage({
             <p className="text-sm text-gray-400">{t("by", { name: makerName })}</p>
           )}
         </div>
-        <div className="ml-auto">
-          <VoteButton
-            productId={product.id}
-            initialCount={product.voteCount}
-            initialVoted={votedIds.has(product.id)}
-            size="lg"
-          />
-        </div>
+        {product.status === "approved" && (
+          <div className="ml-auto">
+            <VoteButton
+              productId={product.id}
+              initialCount={product.voteCount}
+              initialVoted={votedIds.has(product.id)}
+              size="lg"
+            />
+          </div>
+        )}
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
