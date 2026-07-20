@@ -6,8 +6,10 @@ import { auth } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
 import { getProductBySlug } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
+import { listComments } from "@/db/queries/comments";
 import { pickLocalized } from "@/lib/locale-content";
 import { VoteButton } from "@/components/VoteButton";
+import { CommentSection } from "@/components/CommentSection";
 
 export default async function ProductPage({
   params,
@@ -30,6 +32,9 @@ export default async function ProductPage({
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, [product.id])
     : new Set<string>();
+
+  const productComments =
+    product.status === "approved" ? await listComments(product.id) : [];
 
   const t = await getTranslations("product");
   const { tagline, description } = pickLocalized(product, locale);
@@ -116,6 +121,17 @@ export default async function ProductPage({
             />
           ))}
         </div>
+      )}
+
+      {product.status === "approved" && (
+        <CommentSection
+          productId={product.id}
+          slug={product.slug}
+          comments={productComments}
+          viewerId={session?.user?.id ?? null}
+          viewerIsAdmin={viewerIsAdmin}
+          isAuthenticated={!!session?.user}
+        />
       )}
     </article>
   );
