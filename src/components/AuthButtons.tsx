@@ -14,8 +14,13 @@ export async function AuthButtons() {
           await signOut({ redirectTo: `/${locale}` });
         }}
       >
-        <span style={{ marginRight: 8 }}>{session.user.name}</span>
-        <button type="submit">{t("signOut")}</button>
+        <span className="mr-2 text-sm">{session.user.name}</span>
+        <button
+          type="submit"
+          className="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-50"
+        >
+          {t("signOut")}
+        </button>
       </form>
     );
   }
@@ -26,7 +31,12 @@ export async function AuthButtons() {
         await signIn("google", { redirectTo: `/${locale}` });
       }}
     >
-      <button type="submit">{t("signIn")}</button>
+      <button
+        type="submit"
+        className="rounded-md border border-gray-300 px-3 py-1 text-sm hover:bg-gray-50"
+      >
+        {t("signIn")}
+      </button>
     </form>
   );
 }

@@ -2,6 +2,11 @@
   "app": { "name": "Produknesia", "tagline": "Discover Indonesian products" },
   "nav": { "submit": "Submit", "signIn": "Sign in", "signOut": "Sign out", "languageLabel": "Language" },
   "home": { "popular": "Popular", "newest": "Newest" },
+  "feed": {
+    "empty": "No products yet. Be the first to launch!",
+    "by": "by {name}",
+    "votes": "{count} votes"
+  },
   "submit": {
     "title": "Submit a product",
     "signInFirst": "Sign in to submit your product.",

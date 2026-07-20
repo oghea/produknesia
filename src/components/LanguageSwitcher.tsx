@@ -15,7 +15,12 @@ export function LanguageSwitcher() {
   return (
     <nav aria-label={t("languageLabel")}>
       {routing.locales.map((locale) => (
-        <Link key={locale} href={pathname} locale={locale} style={{ margin: 4 }}>
+        <Link
+          key={locale}
+          href={pathname}
+          locale={locale}
+          className="mx-1 text-sm text-gray-600 hover:text-black"
+        >
           {LABELS[locale]}
         </Link>
       ))}
