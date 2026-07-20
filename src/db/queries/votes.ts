@@ -26,9 +26,22 @@ export async function toggleVote(
 
     const voted = inserted.length > 0;
     if (!voted) {
-      await tx
+      const deleted = await tx
         .delete(votes)
-        .where(and(eq(votes.productId, productId), eq(votes.userId, userId)));
+        .where(and(eq(votes.productId, productId), eq(votes.userId, userId)))
+        .returning({ id: votes.id });
+
+      // If a concurrent transaction already removed this vote (e.g. a
+      // double-click or multi-tab un-vote), our delete affects 0 rows.
+      // Skip the decrement in that case so voteCount doesn't drift below
+      // the true row count — the other transaction already accounted for it.
+      if (deleted.length === 0) {
+        const [current] = await tx
+          .select({ voteCount: products.voteCount })
+          .from(products)
+          .where(eq(products.id, productId));
+        return { voted: false, voteCount: current.voteCount };
+      }
     }
 
     const [updated] = await tx
