@@ -1,8 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import { config } from "dotenv";
 
-// Load DATABASE_URL etc. so modules that read process.env at import time
-// (e.g. src/db/index.ts) don't throw. Tests never use the live `db` export —
-// they always inject a PGlite `dbc` — so this only needs to satisfy the
-// module-level env check, not establish a real connection.
-config({ path: [".env.local", ".env"] });
+// Fake but well-formed: satisfies src/db/index.ts's import guard while making
+// any accidental live-DB query fail fast (connection refused).
+process.env.DATABASE_URL = "postgresql://test:test@127.0.0.1:9/test_placeholder";
