@@ -59,7 +59,7 @@ export async function getUserByUsername(
       createdAt: users.createdAt,
     })
     .from(users)
-    .where(eq(users.username, username))
+    .where(eq(users.username, username.toLowerCase()))
     .limit(1);
   return rows[0] ?? null;
 }

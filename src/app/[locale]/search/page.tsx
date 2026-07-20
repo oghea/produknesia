@@ -9,12 +9,13 @@ export default async function SearchPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string | string[] }>;
 }) {
   const { locale } = await params;
-  const { q = "" } = await searchParams;
+  const { q: rawQ } = await searchParams;
+  const q = typeof rawQ === "string" ? rawQ : "";
   const t = await getTranslations("search");
-  const query = q.trim();
+  const query = q.trim().slice(0, 100);
 
   const items = await searchProducts(query);
   const session = await auth();

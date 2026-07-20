@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { createTestDb, seedTestUser, type TestDb } from "@/test/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { assignUsername } from "./users";
+import { assignUsername, getUserByUsername } from "./users";
 
 let db: TestDb;
 
@@ -32,5 +32,13 @@ describe("assignUsername", () => {
 
   it("returns null for an unknown user", async () => {
     expect(await assignUsername("nope", db)).toBeNull();
+  });
+});
+
+describe("getUserByUsername", () => {
+  it("is case-insensitive on input", async () => {
+    await seedTestUser(db, { name: "Cased", username: "cased-user" });
+    const u = await getUserByUsername("Cased-User", db);
+    expect(u?.username).toBe("cased-user");
   });
 });
