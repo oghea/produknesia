@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import type { CommentItem } from "@/db/queries/comments";
 import { deleteCommentAction } from "@/app/[locale]/products/[slug]/actions";
@@ -22,6 +22,7 @@ async function Comment({
   children?: React.ReactNode;
 }) {
   const t = await getTranslations("comments");
+  const format = await getFormatter();
   return (
     <div className="flex gap-3">
       <Avatar name={comment.authorName} />
@@ -31,7 +32,7 @@ async function Comment({
             {comment.authorName ?? "?"}
           </span>
           <span className="text-xs text-gray-400">
-            {comment.createdAt.toLocaleDateString()}
+            {format.dateTime(comment.createdAt, { dateStyle: "medium" })}
           </span>
           {canDelete && !comment.isDeleted && (
             <form action={deleteCommentAction} className="ml-auto">
@@ -49,7 +50,22 @@ async function Comment({
           <p className="text-sm italic text-gray-400">{t("deleted")}</p>
         ) : (
           <div className="prose prose-sm max-w-none">
-            <ReactMarkdown>{comment.body}</ReactMarkdown>
+            <ReactMarkdown
+              components={{
+                img: () => null,
+                a: ({ href, children }) => (
+                  <a
+                    href={href}
+                    rel="nofollow ugc noopener noreferrer"
+                    target="_blank"
+                  >
+                    {children}
+                  </a>
+                ),
+              }}
+            >
+              {comment.body}
+            </ReactMarkdown>
           </div>
         )}
         {children}
