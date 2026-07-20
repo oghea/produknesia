@@ -137,8 +137,9 @@ category. Search uses Postgres `ILIKE` over name/tagline. Product detail page
 shows full content + comment thread.
 
 ### Comment (auth required)
-Markdown body, one level of replies, optimistic add, soft-delete by author or
-admin.
+Markdown body, one level of replies, standard submit (pending-disabled button,
+form resets on success — optimism is reserved for the high-frequency vote
+action), soft-delete by author or admin.
 
 ## Ranking Rationale
 
