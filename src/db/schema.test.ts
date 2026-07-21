@@ -6,6 +6,7 @@ import {
   productUpdates,
   productWatches,
   invites,
+  launchSubscribers,
 } from "./schema";
 import { getTableColumns } from "drizzle-orm";
 import { getTableConfig } from "drizzle-orm/pg-core";
@@ -72,5 +73,10 @@ describe("phase 5 tables", () => {
         "expiresAt", "claimedBy", "claimedProductId", "claimedAt",
       ]),
     );
+  });
+
+  it("launchSubscribers has a unique email", () => {
+    const cols = Object.keys(getTableColumns(launchSubscribers));
+    expect(cols).toEqual(expect.arrayContaining(["id", "email", "createdAt"]));
   });
 });
