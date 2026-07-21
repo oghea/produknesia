@@ -2,7 +2,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Clock, ExternalLink, Megaphone, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, ExternalLink, Megaphone, XCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import { auth } from "@/auth";
@@ -41,10 +41,13 @@ export async function generateMetadata({
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<{ update?: string }>;
 }) {
   const { locale, slug } = await params;
+  const { update } = await searchParams;
   const detail = await getDetail(slug);
   if (!detail) notFound();
 
@@ -86,6 +89,12 @@ export default async function ProductPage({
           {t("rejectedBanner", {
             reason: product.rejectionReason ?? t("noReason"),
           })}
+        </p>
+      )}
+      {update === "1" && (
+        <p className="mb-6 flex items-center gap-2 rounded-lg border border-chart-3/40 bg-chart-3/10 p-3 text-sm">
+          <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
+          {tUpdates("success")}
         </p>
       )}
 
