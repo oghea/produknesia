@@ -9,8 +9,16 @@ import { parseCommentForm, parseUpdateForm } from "@/lib/validation";
 import { createComment, softDeleteComment } from "@/db/queries/comments";
 import { createUpdate } from "@/db/queries/updates";
 import { localePath } from "@/i18n/locale-path";
+import {
+  submittedUpdateValues,
+  type UpdateValues,
+} from "@/lib/form-values";
 
-export type CommentState = { ok: boolean; errors: Record<string, string> };
+export type CommentState = {
+  ok: boolean;
+  errors: Record<string, string>;
+  values?: { body?: string };
+};
 
 export async function addCommentAction(
   _prev: CommentState,
@@ -24,8 +32,9 @@ export async function addCommentAction(
     return { ok: false, errors: {} }; // unreachable — signIn redirects
   }
 
+  const body = String(formData.get("body") ?? "");
   const parsed = parseCommentForm(formData);
-  if (!parsed.ok) return { ok: false, errors: parsed.errors };
+  if (!parsed.ok) return { ok: false, errors: parsed.errors, values: { body } };
 
   const productId = String(formData.get("productId") ?? "");
   const parentIdRaw = String(formData.get("parentId") ?? "");
@@ -35,7 +44,12 @@ export async function addCommentAction(
     body: parsed.data.body,
     parentId: parentIdRaw || undefined,
   });
-  if (!created) return { ok: false, errors: { body: "validation.formError" } };
+  if (!created)
+    return {
+      ok: false,
+      errors: { body: "validation.formError" },
+      values: { body },
+    };
 
   const locale = await getLocale();
   revalidatePath(localePath(locale, `/products/${slug}`));
@@ -53,7 +67,11 @@ export async function deleteCommentAction(formData: FormData): Promise<void> {
   revalidatePath(localePath(locale, `/products/${slug}`));
 }
 
-export type UpdateState = { ok: boolean; errors: Record<string, string> };
+export type UpdateState = {
+  ok: boolean;
+  errors: Record<string, string>;
+  values?: UpdateValues;
+};
 
 export async function postUpdateAction(
   _prev: UpdateState,
@@ -69,15 +87,17 @@ export async function postUpdateAction(
     return { ok: false, errors: {} }; // unreachable — signIn redirects
   }
 
+  const values = submittedUpdateValues(formData);
   const parsed = parseUpdateForm(formData);
-  if (!parsed.ok) return { ok: false, errors: parsed.errors };
+  if (!parsed.ok) return { ok: false, errors: parsed.errors, values };
 
   const productId = String(formData.get("productId") ?? "");
   const created = await createUpdate(
     { productId, authorId: session.user.id, ...parsed.data },
     isAdmin(session),
   );
-  if (!created) return { ok: false, errors: { form: "validation.formError" } };
+  if (!created)
+    return { ok: false, errors: { form: "validation.formError" }, values };
 
   const locale = await getLocale();
   revalidatePath(localePath(locale, `/products/${slug}`));

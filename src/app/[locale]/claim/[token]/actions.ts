@@ -9,6 +9,7 @@ import { parseProductForm, inviteDraftSchema } from "@/lib/validation";
 import { putImage, validateImage } from "@/lib/storage";
 import { claimInvite, getOpenInviteByToken } from "@/db/queries/invites";
 import type { SubmitState } from "@/app/[locale]/submit/actions";
+import { submittedProductValues } from "@/lib/form-values";
 
 function pickFiles(formData: FormData, field: string): File[] {
   return formData
@@ -30,20 +31,21 @@ export async function claimAction(
     return { errors: {} }; // unreachable — signIn redirects
   }
 
+  const values = submittedProductValues(formData);
   const invite = await getOpenInviteByToken(token);
-  if (!invite) return { errors: { form: "validation.formError" } };
+  if (!invite) return { errors: { form: "validation.formError" }, values };
   const draftParsed = inviteDraftSchema.safeParse(invite.draft);
-  if (!draftParsed.success) return { errors: { form: "validation.formError" } };
+  if (!draftParsed.success) return { errors: { form: "validation.formError" }, values };
   const draft = draftParsed.data;
 
   const parsed = parseProductForm(formData);
-  if (!parsed.ok) return { errors: parsed.errors };
+  if (!parsed.ok) return { errors: parsed.errors, values };
 
   const logoFiles = pickFiles(formData, "logo");
   const screenshotFiles = pickFiles(formData, "screenshots");
-  if (logoFiles.length > 1) return { errors: { logo: "validation.logoSingle" } };
+  if (logoFiles.length > 1) return { errors: { logo: "validation.logoSingle" }, values };
   if (screenshotFiles.length > 4) {
-    return { errors: { screenshots: "validation.screenshotsTooMany" } };
+    return { errors: { screenshots: "validation.screenshotsTooMany" }, values };
   }
   const toValidate = [
     ...logoFiles.map((file) => ({ field: "logo" as const, file })),
@@ -51,7 +53,7 @@ export async function claimAction(
   ];
   for (const { field, file } of toValidate) {
     const err = validateImage(file);
-    if (err) return { errors: { [field]: err } };
+    if (err) return { errors: { [field]: err }, values };
   }
 
   let slug: string;
@@ -69,10 +71,10 @@ export async function claimAction(
       screenshotUrls,
     });
     const result = await claimInvite({ token, userId: session.user.id, data });
-    if (!result) return { errors: { form: "validation.formError" } };
+    if (!result) return { errors: { form: "validation.formError" }, values };
     slug = result.slug;
   } catch {
-    return { errors: { form: "validation.formError" } };
+    return { errors: { form: "validation.formError" }, values };
   }
 
   revalidatePath("/", "layout");

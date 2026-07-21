@@ -6,6 +6,7 @@ import {
   addCommentAction,
   type CommentState,
 } from "@/app/[locale]/products/[slug]/actions";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -41,6 +42,7 @@ export function CommentForm({
         rows={parentId ? 2 : 3}
         placeholder={t("comments.placeholder")}
         aria-label={t("comments.placeholder")}
+        defaultValue={state.ok ? undefined : state.values?.body}
       />
       {state.errors.body && (
         <p className="text-sm text-destructive">{t(state.errors.body)}</p>
@@ -51,6 +53,9 @@ export function CommentForm({
         disabled={pending}
         className="cursor-pointer self-end"
       >
+        {pending && (
+          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+        )}
         {parentId ? t("comments.reply") : t("comments.send")}
       </Button>
     </form>

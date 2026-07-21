@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { auth, signIn, signOut } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
-import { Button } from "@/components/ui/button";
+import { PendingButton } from "./PendingButton";
 import { UserMenu } from "./UserMenu";
 import { localePath } from "@/i18n/locale-path";
 
@@ -32,14 +32,13 @@ export async function AuthButtons() {
         await signIn("google", { redirectTo: localePath(locale, "/") });
       }}
     >
-      <Button
-        type="submit"
+      <PendingButton
         variant="outline"
         size="sm"
         className="cursor-pointer"
       >
         {t("signIn")}
-      </Button>
+      </PendingButton>
     </form>
   );
 }

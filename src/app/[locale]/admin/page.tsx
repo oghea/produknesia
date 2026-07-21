@@ -9,6 +9,7 @@ import { listPendingUpdates } from "@/db/queries/updates";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PendingButton } from "@/components/PendingButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -104,14 +105,13 @@ export default async function AdminPage({
               <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-start">
                 <form action={approveAction}>
                   <input type="hidden" name="id" value={p.id} />
-                  <Button
-                    type="submit"
+                  <PendingButton
                     size="sm"
                     className="w-full cursor-pointer bg-chart-3 text-white hover:bg-chart-3/85 sm:w-auto"
                   >
                     <Check className="size-4" aria-hidden="true" />
                     {t("approve")}
-                  </Button>
+                  </PendingButton>
                 </form>
                 <form action={rejectAction} className="flex flex-1 gap-2">
                   <input type="hidden" name="id" value={p.id} />
@@ -121,15 +121,14 @@ export default async function AdminPage({
                     aria-label={t("reasonPlaceholder")}
                     className="h-8 flex-1 text-sm"
                   />
-                  <Button
-                    type="submit"
+                  <PendingButton
                     size="sm"
                     variant="destructive"
                     className="cursor-pointer"
                   >
                     <X className="size-4" aria-hidden="true" />
                     {t("reject")}
-                  </Button>
+                  </PendingButton>
                 </form>
               </div>
             </CardContent>
@@ -174,14 +173,13 @@ export default async function AdminPage({
               <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-start">
                 <form action={approveUpdateAction}>
                   <input type="hidden" name="id" value={u.id} />
-                  <Button
-                    type="submit"
+                  <PendingButton
                     size="sm"
                     className="w-full cursor-pointer bg-chart-3 text-white hover:bg-chart-3/85 sm:w-auto"
                   >
                     <Check className="size-4" aria-hidden="true" />
                     {t("approve")}
-                  </Button>
+                  </PendingButton>
                 </form>
                 <form action={rejectUpdateAction} className="flex flex-1 gap-2">
                   <input type="hidden" name="id" value={u.id} />
@@ -191,15 +189,14 @@ export default async function AdminPage({
                     aria-label={t("reasonPlaceholder")}
                     className="h-9 flex-1 text-sm"
                   />
-                  <Button
-                    type="submit"
+                  <PendingButton
                     size="sm"
                     variant="destructive"
                     className="cursor-pointer"
                   >
                     <X className="size-4" aria-hidden="true" />
                     {t("reject")}
-                  </Button>
+                  </PendingButton>
                 </form>
               </div>
             </CardContent>

@@ -32,6 +32,8 @@ export function UpdateForm({
     postUpdateAction,
     initialState,
   );
+  // Repopulate after a failed submit (React 19 auto-resets form fields).
+  const v = state.values ?? {};
 
   return (
     <form action={formAction} className="mt-6 flex flex-col gap-5">
@@ -40,30 +42,35 @@ export function UpdateForm({
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="upd-version">{t("version")}</Label>
-        <Input id="upd-version" name="version" placeholder="v1.2.0" />
+        <Input
+          id="upd-version"
+          name="version"
+          placeholder="v1.2.0"
+          defaultValue={v.version}
+        />
         <FieldError k={state.errors.version} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="upd-title-id">{t("titleId")}</Label>
-          <Input id="upd-title-id" name="titleId" />
+          <Input id="upd-title-id" name="titleId" defaultValue={v.titleId} />
           <FieldError k={state.errors.titleId} />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="upd-title-en">{t("titleEn")}</Label>
-          <Input id="upd-title-en" name="titleEn" />
+          <Input id="upd-title-en" name="titleEn" defaultValue={v.titleEn} />
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="upd-body-id">{t("bodyId")}</Label>
-        <Textarea id="upd-body-id" name="bodyId" rows={5} />
+        <Textarea id="upd-body-id" name="bodyId" rows={5} defaultValue={v.bodyId} />
         <FieldError k={state.errors.bodyId} />
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="upd-body-en">{t("bodyEn")}</Label>
-        <Textarea id="upd-body-en" name="bodyEn" rows={5} />
+        <Textarea id="upd-body-en" name="bodyEn" rows={5} defaultValue={v.bodyEn} />
       </div>
       <p className="-mt-3 text-sm text-muted-foreground">{t("pairHint")}</p>
 

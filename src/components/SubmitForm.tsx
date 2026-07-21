@@ -47,6 +47,10 @@ export function SubmitForm({
   const t = useTranslations("submit");
   const tInvites = useTranslations("invites");
   const [state, formAction, pending] = useActionState(action, initialState);
+  // React 19 resets uncontrolled fields after every action, so a failed
+  // submit repopulates from the echoed values (fresh forms use defaults).
+  const v = { ...defaults, ...state.values };
+  const checkedIds = state.values?.categoryIds ?? defaults?.categoryIds;
 
   return (
     <form action={formAction} className="mt-6 flex flex-col gap-5">
@@ -60,7 +64,7 @@ export function SubmitForm({
         <Input
           id="submit-name"
           name="name"
-          defaultValue={defaults?.name}
+          defaultValue={v.name}
           required
         />
         <FieldError k={state.errors.name} />
@@ -72,7 +76,7 @@ export function SubmitForm({
           <Input
             id="submit-tagline-id"
             name="taglineId"
-            defaultValue={defaults?.taglineId}
+            defaultValue={v.taglineId}
           />
           <FieldError k={state.errors.taglineId} />
         </div>
@@ -81,7 +85,7 @@ export function SubmitForm({
           <Input
             id="submit-tagline-en"
             name="taglineEn"
-            defaultValue={defaults?.taglineEn}
+            defaultValue={v.taglineEn}
           />
         </div>
       </div>
@@ -93,7 +97,7 @@ export function SubmitForm({
           id="submit-desc-id"
           name="descriptionId"
           rows={5}
-          defaultValue={defaults?.descriptionId}
+          defaultValue={v.descriptionId}
         />
         <FieldError k={state.errors.descriptionId} />
       </div>
@@ -103,7 +107,7 @@ export function SubmitForm({
           id="submit-desc-en"
           name="descriptionEn"
           rows={5}
-          defaultValue={defaults?.descriptionEn}
+          defaultValue={v.descriptionEn}
         />
       </div>
 
@@ -114,7 +118,7 @@ export function SubmitForm({
           name="websiteUrl"
           type="url"
           placeholder="https://"
-          defaultValue={defaults?.websiteUrl}
+          defaultValue={v.websiteUrl}
           required
         />
         <FieldError k={state.errors.websiteUrl} />
@@ -133,7 +137,7 @@ export function SubmitForm({
                   type="checkbox"
                   name="categoryIds"
                   value={c.id}
-                  defaultChecked={defaults?.categoryIds?.includes(c.id)}
+                  defaultChecked={checkedIds?.includes(c.id)}
                   className="size-4 accent-primary"
                 />
                 {c.label}
@@ -147,7 +151,7 @@ export function SubmitForm({
       {noteField && (
         <div className="flex flex-col gap-2">
           <Label htmlFor="submit-note">{tInvites("note")}</Label>
-          <Input id="submit-note" name="note" defaultValue={defaults?.note} />
+          <Input id="submit-note" name="note" defaultValue={v.note} />
         </div>
       )}
 

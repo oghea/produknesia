@@ -6,6 +6,7 @@ import { listCategories } from "@/db/queries/categories";
 import { SubmitForm } from "@/components/SubmitForm";
 import { FadeUp } from "@/components/motion-primitives";
 import { Button } from "@/components/ui/button";
+import { PendingButton } from "@/components/PendingButton";
 import { localePath } from "@/i18n/locale-path";
 
 export default async function SubmitPage({
@@ -37,10 +38,10 @@ export default async function SubmitPage({
                 await signIn("google", { redirectTo: localePath(locale, "/submit") });
               }}
             >
-              <Button type="submit" className="cursor-pointer">
+              <PendingButton className="cursor-pointer">
                 <LogIn className="size-4" aria-hidden="true" />
                 {t("nav.signIn")}
-              </Button>
+              </PendingButton>
             </form>
           </div>
         </FadeUp>

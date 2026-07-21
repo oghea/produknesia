@@ -8,7 +8,7 @@ import { listCategories } from "@/db/queries/categories";
 import { inviteDraftSchema } from "@/lib/validation";
 import { SubmitForm } from "@/components/SubmitForm";
 import { FadeUp } from "@/components/motion-primitives";
-import { Button } from "@/components/ui/button";
+import { PendingButton } from "@/components/PendingButton";
 import { claimAction } from "./actions";
 
 export default async function ClaimPage({
@@ -96,10 +96,10 @@ export default async function ClaimPage({
               });
             }}
           >
-            <Button type="submit" className="cursor-pointer">
+            <PendingButton className="cursor-pointer">
               <LogIn className="size-4" aria-hidden="true" />
               {t("claimSignIn")}
-            </Button>
+            </PendingButton>
           </form>
         ) : (
           <ClaimForm token={token} locale={locale} draft={draft} />

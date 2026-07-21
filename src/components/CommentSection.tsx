@@ -1,4 +1,3 @@
-import { Trash2 } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import type { CommentItem } from "@/db/queries/comments";
@@ -6,6 +5,7 @@ import { deleteCommentAction } from "@/app/[locale]/products/[slug]/actions";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { CommentForm } from "./CommentForm";
+import { CommentDeleteButton } from "./PendingButton";
 
 async function Comment({
   comment,
@@ -39,13 +39,7 @@ async function Comment({
             <form action={deleteCommentAction} className="ml-auto">
               <input type="hidden" name="commentId" value={comment.id} />
               <input type="hidden" name="slug" value={slug} />
-              <button
-                type="submit"
-                aria-label={t("delete")}
-                className="flex cursor-pointer items-center gap-1 rounded-md p-1 text-xs text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <Trash2 className="size-3.5" aria-hidden="true" />
-              </button>
+              <CommentDeleteButton label={t("delete")} />
             </form>
           )}
         </div>

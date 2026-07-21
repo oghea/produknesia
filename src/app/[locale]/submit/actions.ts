@@ -7,8 +7,15 @@ import { parseProductForm } from "@/lib/validation";
 import { putImage, validateImage } from "@/lib/storage";
 import { createProduct } from "@/db/queries/products";
 import { localePath } from "@/i18n/locale-path";
+import {
+  submittedProductValues,
+  type SubmitValues,
+} from "@/lib/form-values";
 
-export type SubmitState = { errors: Record<string, string> };
+export type SubmitState = {
+  errors: Record<string, string>;
+  values?: SubmitValues;
+};
 
 function pickFiles(formData: FormData, field: string): File[] {
   return formData
@@ -24,16 +31,17 @@ export async function submitProduct(
   const locale = await getLocale();
   if (!session?.user) redirect(localePath(locale, "/submit"));
 
+  const values = submittedProductValues(formData);
   const parsed = parseProductForm(formData);
-  if (!parsed.ok) return { errors: parsed.errors };
+  if (!parsed.ok) return { errors: parsed.errors, values };
 
   const logoFiles = pickFiles(formData, "logo");
   const screenshotFiles = pickFiles(formData, "screenshots");
   if (logoFiles.length > 1) {
-    return { errors: { logo: "validation.logoSingle" } };
+    return { errors: { logo: "validation.logoSingle" }, values };
   }
   if (screenshotFiles.length > 4) {
-    return { errors: { screenshots: "validation.screenshotsTooMany" } };
+    return { errors: { screenshots: "validation.screenshotsTooMany" }, values };
   }
   const toValidate: Array<{ field: "logo" | "screenshots"; file: File }> = [
     ...logoFiles.map((file) => ({ field: "logo" as const, file })),
@@ -41,7 +49,7 @@ export async function submitProduct(
   ];
   for (const { field, file } of toValidate) {
     const err = validateImage(file);
-    if (err) return { errors: { [field]: err } };
+    if (err) return { errors: { [field]: err }, values };
   }
 
   try {
@@ -57,7 +65,7 @@ export async function submitProduct(
       makerId: session.user.id,
     });
   } catch {
-    return { errors: { form: "validation.formError" } };
+    return { errors: { form: "validation.formError" }, values };
   }
 
   redirect(localePath(locale, "/submit?ok=1"));

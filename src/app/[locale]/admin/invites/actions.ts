@@ -10,6 +10,7 @@ import { parseProductForm, inviteDraftSchema } from "@/lib/validation";
 import { putImage, validateImage } from "@/lib/storage";
 import { createInvite } from "@/db/queries/invites";
 import type { SubmitState } from "@/app/[locale]/submit/actions";
+import { submittedProductValues } from "@/lib/form-values";
 
 function pickFiles(formData: FormData, field: string): File[] {
   return formData
@@ -24,14 +25,16 @@ export async function createInviteAction(
   const session = await auth();
   assertAdmin(session);
 
+  const values = submittedProductValues(formData);
   const parsed = parseProductForm(formData);
-  if (!parsed.ok) return { errors: parsed.errors };
+  if (!parsed.ok) return { errors: parsed.errors, values };
 
   const logoFiles = pickFiles(formData, "logo");
   const screenshotFiles = pickFiles(formData, "screenshots");
-  if (logoFiles.length > 1) return { errors: { logo: "validation.logoSingle" } };
+  if (logoFiles.length > 1)
+    return { errors: { logo: "validation.logoSingle" }, values };
   if (screenshotFiles.length > 4) {
-    return { errors: { screenshots: "validation.screenshotsTooMany" } };
+    return { errors: { screenshots: "validation.screenshotsTooMany" }, values };
   }
   const toValidate = [
     ...logoFiles.map((file) => ({ field: "logo" as const, file })),
@@ -39,7 +42,7 @@ export async function createInviteAction(
   ];
   for (const { field, file } of toValidate) {
     const err = validateImage(file);
-    if (err) return { errors: { [field]: err } };
+    if (err) return { errors: { [field]: err }, values };
   }
 
   let token: string;
@@ -62,7 +65,7 @@ export async function createInviteAction(
     });
     token = invite.token;
   } catch {
-    return { errors: { form: "validation.formError" } };
+    return { errors: { form: "validation.formError" }, values };
   }
 
   revalidatePath("/", "layout");
