@@ -51,13 +51,11 @@ export function VoteButton({
       aria-pressed={voted}
       aria-label={`${voted ? t("voted") : t("label")} (${count})`}
       className={cn(
-        // Sticker press: hard ink border + offset shadow; the button
-        // physically sits down when tapped.
-        "flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-(--hard-shadow-color) font-semibold shadow-hard-sm transition-[translate,box-shadow,background-color,color] duration-100 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60",
+        "flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center rounded-lg border font-semibold transition-[background-color,border-color,color,scale] duration-100 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60",
         size === "lg" ? "gap-1 px-5 py-3 text-lg" : "px-3.5 py-2 text-base",
         voted
-          ? "bg-primary text-primary-foreground"
-          : "bg-card text-foreground hover:bg-accent",
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-card text-foreground hover:border-primary/60 hover:text-primary",
       )}
     >
       <motion.span

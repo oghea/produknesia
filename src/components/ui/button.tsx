@@ -18,8 +18,6 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
-        sticker:
-          "border-2 border-(--hard-shadow-color) bg-primary font-semibold text-primary-foreground shadow-hard-sm transition-[translate,box-shadow,background-color] duration-100 hover:bg-primary/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
       },
       size: {
         default:

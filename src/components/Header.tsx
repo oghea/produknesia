@@ -27,7 +27,6 @@ export async function Header() {
 
         <Button
           size="sm"
-          variant="sticker"
           nativeButton={false}
           className="cursor-pointer"
           render={<Link href="/submit" />}

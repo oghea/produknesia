@@ -20,23 +20,23 @@ spent in exactly two places (see Signatures); everything else stays quiet.
     rank numerals; heavy weights (bold/extrabold), used with restraint.
 - **Icons:** Lucide only.
 
-## Signatures (the two allowed bold devices)
+## Signature (the one allowed bold device)
 
-1. **Sticker press** — every red action (vote, submit, visit, sign-in CTA):
-   `border-2 border-foreground` + `shadow-hard-sm` (hard offset shadow, token
-   `--shadow-hard-sm`) and `active:translate-x-0.5 active:translate-y-0.5
-   active:shadow-none` so it physically sits down. Available as
-   `<Button variant="sticker">`. Never on secondary controls.
-2. **Rank numerals** — Popular feeds show `01 02 03…` in Bricolage extrabold
-   (`rank` prop on ProductCard); #1 in primary red, rest muted. Only where
-   order is real information (popular sort) — never on Newest/search/profile.
+**Rank numerals** — Popular feeds show `01 02 03…` in Bricolage extrabold
+(`rank` prop on ProductCard); #1 in primary red, rest muted. Only where
+order is real information (popular sort) — never on Newest/search/profile.
+
+Buttons are FLAT by owner decision (2026-07-21): solid red fill for actions,
+no ink borders, no hard shadows. The sticker treatment was tried and removed —
+do not reintroduce it. Vote button: thin border unvoted, solid red voted,
+subtle `active:scale-[0.97]` press.
 
 ## Color tokens
 
 Light: background near-white paper `oklch(0.99 0.003 90)`; ink foreground
 `oklch(0.185 0.012 50)`; primary merah `oklch(0.585 0.21 29)`; borders visible
 warm gray. Dark: warm ink base `oklch(0.175 0.01 50)`, brighter merah
-`oklch(0.66 0.19 29)`. `--hard-shadow-color` = ink (light) / near-black (dark).
+`oklch(0.66 0.19 29)`.
 Red appears ONLY on: sticker actions, brand full stop, rank #1, voted state,
 destructive-adjacent semantics.
 

@@ -37,7 +37,7 @@ export default async function SubmitPage({
                 await signIn("google", { redirectTo: localePath(locale, "/submit") });
               }}
             >
-              <Button type="submit" variant="sticker" className="cursor-pointer">
+              <Button type="submit" className="cursor-pointer">
                 <LogIn className="size-4" aria-hidden="true" />
                 {t("nav.signIn")}
               </Button>
