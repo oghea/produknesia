@@ -53,7 +53,7 @@ export function VoteButton({
       className={cn(
         // Sticker press: hard ink border + offset shadow; the button
         // physically sits down when tapped.
-        "flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-foreground font-semibold shadow-hard-sm transition-[translate,box-shadow,background-color,color] duration-100 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60",
+        "flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-(--hard-shadow-color) font-semibold shadow-hard-sm transition-[translate,box-shadow,background-color,color] duration-100 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60",
         size === "lg" ? "gap-0.5 px-4 py-2 text-base" : "px-3 py-1.5 text-sm",
         voted
           ? "bg-primary text-primary-foreground"
