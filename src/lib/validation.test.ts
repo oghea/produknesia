@@ -158,6 +158,31 @@ describe("parseUpdateForm", () => {
   });
 });
 
+import { parseWaitlistForm } from "./validation";
+
+describe("parseWaitlistForm", () => {
+  function wf(email?: string): FormData {
+    const fd = new FormData();
+    if (email !== undefined) fd.append("email", email);
+    return fd;
+  }
+
+  it("accepts and normalizes a valid email", () => {
+    const r = parseWaitlistForm(wf("  Budi@Example.COM "));
+    expect(r).toEqual({ ok: true, email: "budi@example.com" });
+  });
+
+  it("rejects invalid and missing emails with an i18n key", () => {
+    for (const fd of [wf("not-an-email"), wf("")]) {
+      const r = parseWaitlistForm(fd);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.errors.email).toBe("validation.emailInvalid");
+    }
+    const r = parseWaitlistForm(wf());
+    expect(r.ok).toBe(false);
+  });
+});
+
 describe("inviteDraftSchema", () => {
   const base = {
     name: "Kopi Kirim",

@@ -3,6 +3,21 @@
     "name": "Produknesia",
     "tagline": "Discover Indonesian products"
   },
+  "landing": {
+    "badge": "Launching soon",
+    "headline": "The stage for Indonesian products.",
+    "beat1": "Every week, Indonesian developers and founders launch remarkable products — then drown on global platforms that weren't built for us. Wrong timezone, wrong language, wrong audience.",
+    "beat2": "Produknesia is the stage where Indonesian products launch first: discovered, upvoted, and discussed by their own community.",
+    "beat3": "We're opening the stage with the first 100+ products. Be the first to know — or be one of the makers on it.",
+    "emailPlaceholder": "you@email.com",
+    "joinWaitlist": "Join the waitlist",
+    "joined": "You're on the list! See you on launch day.",
+    "alreadyIn": "You're already in — see you on launch day.",
+    "or": "or",
+    "signInGoogle": "Sign in with Google",
+    "makerCta": "Have a product? Submit it now →",
+    "proof": "{count} products are getting ready for launch"
+  },
   "nav": {
     "submit": "Submit",
     "signIn": "Sign in",
@@ -54,7 +69,8 @@
     "commentRequired": "Comment cannot be empty.",
     "commentTooLong": "Comment is too long (max 2000 characters).",
     "updateTitleRequired": "Fill in at least one title.",
-    "updateBodyRequired": "Fill in at least one body."
+    "updateBodyRequired": "Fill in at least one body.",
+    "emailInvalid": "Enter a valid email address."
   },
   "comments": {
     "title": "Comments ({count})",

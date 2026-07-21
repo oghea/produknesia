@@ -207,6 +207,16 @@ export async function approveProduct(
   return rows.length > 0;
 }
 
+export async function countApprovedProducts(
+  dbc: DBClient = db,
+): Promise<number> {
+  const [row] = await dbc
+    .select({ n: sql<number>`count(*)::int` })
+    .from(products)
+    .where(eq(products.status, "approved"));
+  return row.n;
+}
+
 export async function rejectProduct(
   id: string,
   reason: string | null,

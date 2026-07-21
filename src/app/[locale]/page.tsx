@@ -2,10 +2,13 @@ import { Flame, PackageOpen, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { auth } from "@/auth";
+import { isAdmin } from "@/auth-helpers";
+import { isComingSoon } from "@/lib/launch";
 import { listFeed, type FeedSort } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { listCategories } from "@/db/queries/categories";
 import { ProductCard } from "@/components/ProductCard";
+import { Landing } from "@/components/Landing";
 import { FadeUp, StaggerItem, StaggerList } from "@/components/motion-primitives";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -21,11 +24,11 @@ export default async function Home({
   const { sort: sortParam } = await searchParams;
   const sort: FeedSort = sortParam === "newest" ? "newest" : "popular";
   const t = await getTranslations();
-  const [items, cats, session] = await Promise.all([
-    listFeed(sort),
-    listCategories(),
-    auth(),
-  ]);
+  const session = await auth();
+  if (isComingSoon() && !isAdmin(session)) {
+    return <Landing />;
+  }
+  const [items, cats] = await Promise.all([listFeed(sort), listCategories()]);
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
     : new Set<string>();

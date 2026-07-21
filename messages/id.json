@@ -3,6 +3,21 @@
     "name": "Produknesia",
     "tagline": "Temukan produk Indonesia"
   },
+  "landing": {
+    "badge": "Segera diluncurkan",
+    "headline": "Panggungnya produk Indonesia.",
+    "beat1": "Setiap minggu, developer dan founder Indonesia meluncurkan produk luar biasa — lalu tenggelam di platform global yang tidak dibuat untuk kita. Zona waktu yang salah, bahasa yang salah, audiens yang salah.",
+    "beat2": "Produknesia adalah panggung tempat karya anak bangsa launch lebih dulu: ditemukan, didukung, dan didiskusikan oleh komunitasnya sendiri.",
+    "beat3": "Kami membuka panggung bersama 100+ produk pertama. Jadilah yang pertama tahu — atau jadilah salah satu yang tampil.",
+    "emailPlaceholder": "kamu@email.com",
+    "joinWaitlist": "Ikut daftar tunggu",
+    "joined": "Kamu di daftar! Sampai jumpa di hari peluncuran.",
+    "alreadyIn": "Kamu sudah di dalam — sampai jumpa di hari peluncuran.",
+    "or": "atau",
+    "signInGoogle": "Masuk dengan Google",
+    "makerCta": "Punya produk? Kirim sekarang →",
+    "proof": "{count} produk sudah bersiap untuk peluncuran"
+  },
   "nav": {
     "submit": "Kirim",
     "signIn": "Masuk",
@@ -54,7 +69,8 @@
     "commentRequired": "Komentar tidak boleh kosong.",
     "commentTooLong": "Komentar terlalu panjang (maksimal 2000 karakter).",
     "updateTitleRequired": "Isi minimal satu judul.",
-    "updateBodyRequired": "Isi minimal satu isi."
+    "updateBodyRequired": "Isi minimal satu isi.",
+    "emailInvalid": "Masukkan alamat email yang valid."
   },
   "comments": {
     "title": "Komentar ({count})",
