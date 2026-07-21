@@ -1,9 +1,12 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Flame, PackageOpen, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
+import { isAdmin } from "@/auth-helpers";
+import { isComingSoon } from "@/lib/launch";
+import { localePath } from "@/i18n/locale-path";
 import { Link } from "@/i18n/navigation";
 import { getCategoryBySlug, listProductsByCategory } from "@/db/queries/discovery";
 import { getVotedProductIds } from "@/db/queries/votes";
@@ -37,13 +40,15 @@ export default async function CategoryPage({
   const { sort: sortParam } = await searchParams;
   const sort: FeedSort = sortParam === "newest" ? "newest" : "popular";
 
+  const session = await auth();
+  if (isComingSoon() && !isAdmin(session)) redirect(localePath(locale, "/"));
+
   const category = await getCategory(slug);
   if (!category) notFound();
 
-  const [t, items, session] = await Promise.all([
+  const [t, items] = await Promise.all([
     getTranslations(),
     listProductsByCategory(category.id, sort),
-    auth(),
   ]);
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, items.map((i) => i.id))

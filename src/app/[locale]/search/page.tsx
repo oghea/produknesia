@@ -1,6 +1,10 @@
 import { SearchX, Type } from "lucide-react";
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
+import { isAdmin } from "@/auth-helpers";
+import { isComingSoon } from "@/lib/launch";
+import { localePath } from "@/i18n/locale-path";
 import { searchProducts } from "@/db/queries/discovery";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { ProductCard } from "@/components/ProductCard";
@@ -34,10 +38,10 @@ export default async function SearchPage({
   const t = await getTranslations("search");
   const query = q.trim().slice(0, 100);
 
-  const [items, session] = await Promise.all([
-    searchProducts(query),
-    auth(),
-  ]);
+  const session = await auth();
+  if (isComingSoon() && !isAdmin(session)) redirect(localePath(locale, "/"));
+
+  const items = await searchProducts(query);
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
     : new Set<string>();

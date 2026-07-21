@@ -9,6 +9,7 @@ import {
   listPending,
   approveProduct,
   rejectProduct,
+  countApprovedProducts,
 } from "./products";
 import { listCategories } from "./categories";
 
@@ -104,6 +105,15 @@ describe("approve/reject", () => {
     const detail = await getProductBySlug(p.slug, db);
     expect(detail!.product.status).toBe("rejected");
     expect(detail!.product.rejectionReason).toBe("Spam");
+  });
+});
+
+describe("countApprovedProducts", () => {
+  it("counts only approved products", async () => {
+    const a = await createProduct(newProduct({ name: "Live One" }), db);
+    await createProduct(newProduct({ name: "Pending One" }), db);
+    await approveProduct(a.id, db);
+    expect(await countApprovedProducts(db)).toBe(1);
   });
 });
 

@@ -259,6 +259,14 @@ export const productWatches = pgTable(
   }),
 );
 
+export const launchSubscribers = pgTable("launch_subscribers", {
+  id: id(),
+  email: text("email").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+});
+
 export const invites = pgTable("invites", {
   id: id(),
   token: text("token")

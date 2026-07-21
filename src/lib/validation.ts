@@ -130,6 +130,25 @@ export function parseUpdateForm(
   return { ok: false, errors };
 }
 
+const waitlistSchema = z.object({
+  email: z
+    .string("validation.emailInvalid")
+    .trim()
+    .toLowerCase()
+    .email("validation.emailInvalid")
+    .max(200, "validation.emailInvalid"),
+});
+
+export function parseWaitlistForm(
+  formData: FormData,
+): { ok: true; email: string } | { ok: false; errors: Record<string, string> } {
+  const result = waitlistSchema.safeParse({
+    email: formData.get("email") ?? undefined,
+  });
+  if (result.success) return { ok: true, email: result.data.email };
+  return { ok: false, errors: { email: "validation.emailInvalid" } };
+}
+
 export const inviteDraftSchema = productObjectSchema
   .extend({
     logoUrl: z.string().optional(),

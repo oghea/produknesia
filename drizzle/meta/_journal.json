@@ -15,6 +15,13 @@
       "when": 1784657939294,
       "tag": "0001_wakeful_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784671470185,
+      "tag": "0002_lying_piledriver",
+      "breakpoints": true
     }
   ]
 }
