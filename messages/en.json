@@ -116,7 +116,6 @@
     "pairHint": "Fill at least one language for the title and the body.",
     "send": "Submit for review",
     "success": "Submitted! Your update is waiting for review.",
-    "empty": "No updates yet.",
     "pendingBadge": "Under review",
     "rejectedBadge": "Rejected: {reason}",
     "noReason": "not provided"

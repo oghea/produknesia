@@ -64,7 +64,7 @@ export function updateApprovedEmail(opts: {
     .map((p) => `<p style="margin:0 0 12px">${escapeHtml(p).replace(/\n/g, "<br/>")}</p>`)
     .join("");
   return {
-    subject: `${opts.productName} — ${opts.title}`,
+    subject: `${opts.productName} — ${opts.title}`.replace(/[\r\n]+/g, " "),
     html: `
 <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#222">
   <h2 style="margin:24px 0 4px">${escapeHtml(opts.productName)}${versionBadge}</h2>

@@ -132,4 +132,15 @@ describe("approve/reject", () => {
     expect(all[0].rejectionReason).toBe("Too thin");
     expect(await listUpdatesForProduct(productId, false, db)).toHaveLength(0);
   });
+
+  it("orders the public list by publish time, not submission time", async () => {
+    const first = await createUpdate(upd({ titleId: "Lama" }), false, db);
+    const second = await createUpdate(upd({ titleId: "Baru" }), false, db);
+    // Approve in reverse submission order: the later-submitted one publishes first.
+    await approveUpdate(second!.id, db);
+    await new Promise((r) => setTimeout(r, 10));
+    await approveUpdate(first!.id, db);
+    const list = await listUpdatesForProduct(productId, false, db);
+    expect(list.map((u) => u.titleId)).toEqual(["Lama", "Baru"]);
+  });
 });

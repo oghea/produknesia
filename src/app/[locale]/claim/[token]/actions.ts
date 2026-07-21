@@ -32,7 +32,9 @@ export async function claimAction(
 
   const invite = await getOpenInviteByToken(token);
   if (!invite) return { errors: { form: "validation.formError" } };
-  const draft = inviteDraftSchema.parse(invite.draft);
+  const draftParsed = inviteDraftSchema.safeParse(invite.draft);
+  if (!draftParsed.success) return { errors: { form: "validation.formError" } };
+  const draft = draftParsed.data;
 
   const parsed = parseProductForm(formData);
   if (!parsed.ok) return { errors: parsed.errors };

@@ -60,7 +60,9 @@ export async function listUpdatesForProduct(
     .select()
     .from(productUpdates)
     .where(cond)
-    .orderBy(desc(productUpdates.createdAt))
+    .orderBy(
+      desc(sql`coalesce(${productUpdates.publishedAt}, ${productUpdates.createdAt})`),
+    )
     .limit(50);
 }
 

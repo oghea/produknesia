@@ -116,7 +116,6 @@
     "pairHint": "Isi minimal satu bahasa untuk judul dan isi.",
     "send": "Kirim untuk ditinjau",
     "success": "Terkirim! Pembaruanmu sedang menunggu peninjauan.",
-    "empty": "Belum ada pembaruan.",
     "pendingBadge": "Sedang ditinjau",
     "rejectedBadge": "Ditolak: {reason}",
     "noReason": "tidak diberikan"
