@@ -129,5 +129,22 @@
   "adminUpdates": {
     "title": "Pending updates",
     "empty": "No pending updates."
+  },
+  "invites": {
+    "title": "Invites",
+    "new": "New invite",
+    "note": "Who is this for? (private note)",
+    "create": "Create invite link",
+    "created": "Invite created — copy the link below.",
+    "copy": "Copy link",
+    "copied": "Copied!",
+    "open": "Open",
+    "claimed": "Claimed by {name}",
+    "expired": "Expired",
+    "claimTitle": "You're invited to launch on Produknesia",
+    "claimIntro": "We prepared this listing for you. Sign in, adjust anything you like, and publish it as yours.",
+    "claimCta": "Claim & publish",
+    "claimSignIn": "Sign in with Google to claim",
+    "deadEnd": "This invite link is invalid, expired, or already claimed."
   }
 }

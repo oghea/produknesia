@@ -18,46 +18,93 @@ function FieldError({ k }: { k?: string }) {
   return <p className="text-sm text-destructive">{t(k)}</p>;
 }
 
+export type SubmitDefaults = {
+  name?: string;
+  taglineId?: string;
+  taglineEn?: string;
+  descriptionId?: string;
+  descriptionEn?: string;
+  websiteUrl?: string;
+  categoryIds?: string[];
+  note?: string;
+};
+
 export function SubmitForm({
   categories,
+  action = submitProduct,
+  defaults,
+  submitLabel,
+  noteField = false,
+  hiddenFields,
 }: {
   categories: { id: string; label: string }[];
+  action?: (prev: SubmitState, fd: FormData) => Promise<SubmitState>;
+  defaults?: SubmitDefaults;
+  submitLabel?: string;
+  noteField?: boolean;
+  hiddenFields?: Record<string, string>;
 }) {
   const t = useTranslations("submit");
-  const [state, formAction, pending] = useActionState(
-    submitProduct,
-    initialState,
-  );
+  const tInvites = useTranslations("invites");
+  const [state, formAction, pending] = useActionState(action, initialState);
 
   return (
     <form action={formAction} className="mt-6 flex flex-col gap-5">
+      {hiddenFields &&
+        Object.entries(hiddenFields).map(([k, v]) => (
+          <input key={k} type="hidden" name={k} value={v} />
+        ))}
+
       <div className="flex flex-col gap-2">
         <Label htmlFor="submit-name">{t("name")}</Label>
-        <Input id="submit-name" name="name" required />
+        <Input
+          id="submit-name"
+          name="name"
+          defaultValue={defaults?.name}
+          required
+        />
         <FieldError k={state.errors.name} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="submit-tagline-id">{t("taglineId")}</Label>
-          <Input id="submit-tagline-id" name="taglineId" />
+          <Input
+            id="submit-tagline-id"
+            name="taglineId"
+            defaultValue={defaults?.taglineId}
+          />
           <FieldError k={state.errors.taglineId} />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="submit-tagline-en">{t("taglineEn")}</Label>
-          <Input id="submit-tagline-en" name="taglineEn" />
+          <Input
+            id="submit-tagline-en"
+            name="taglineEn"
+            defaultValue={defaults?.taglineEn}
+          />
         </div>
       </div>
       <p className="-mt-3 text-sm text-muted-foreground">{t("taglineHint")}</p>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="submit-desc-id">{t("descriptionId")}</Label>
-        <Textarea id="submit-desc-id" name="descriptionId" rows={5} />
+        <Textarea
+          id="submit-desc-id"
+          name="descriptionId"
+          rows={5}
+          defaultValue={defaults?.descriptionId}
+        />
         <FieldError k={state.errors.descriptionId} />
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="submit-desc-en">{t("descriptionEn")}</Label>
-        <Textarea id="submit-desc-en" name="descriptionEn" rows={5} />
+        <Textarea
+          id="submit-desc-en"
+          name="descriptionEn"
+          rows={5}
+          defaultValue={defaults?.descriptionEn}
+        />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -67,6 +114,7 @@ export function SubmitForm({
           name="websiteUrl"
           type="url"
           placeholder="https://"
+          defaultValue={defaults?.websiteUrl}
           required
         />
         <FieldError k={state.errors.websiteUrl} />
@@ -85,6 +133,7 @@ export function SubmitForm({
                   type="checkbox"
                   name="categoryIds"
                   value={c.id}
+                  defaultChecked={defaults?.categoryIds?.includes(c.id)}
                   className="size-4 accent-primary"
                 />
                 {c.label}
@@ -94,6 +143,13 @@ export function SubmitForm({
         </Card>
         <FieldError k={state.errors.categoryIds} />
       </fieldset>
+
+      {noteField && (
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="submit-note">{tInvites("note")}</Label>
+          <Input id="submit-note" name="note" defaultValue={defaults?.note} />
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="submit-logo">{t("logo")}</Label>
@@ -124,7 +180,7 @@ export function SubmitForm({
         {pending && (
           <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         )}
-        {t("send")}
+        {submitLabel ?? t("send")}
       </Button>
     </form>
   );

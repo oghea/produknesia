@@ -129,5 +129,22 @@
   "adminUpdates": {
     "title": "Pembaruan menunggu",
     "empty": "Tidak ada pembaruan menunggu."
+  },
+  "invites": {
+    "title": "Undangan",
+    "new": "Undangan baru",
+    "note": "Untuk siapa? (catatan pribadi)",
+    "create": "Buat tautan undangan",
+    "created": "Undangan dibuat — salin tautan di bawah.",
+    "copy": "Salin tautan",
+    "copied": "Tersalin!",
+    "open": "Terbuka",
+    "claimed": "Diklaim oleh {name}",
+    "expired": "Kedaluwarsa",
+    "claimTitle": "Kamu diundang meluncurkan produk di Produknesia",
+    "claimIntro": "Kami sudah menyiapkan listing ini untukmu. Masuk, sesuaikan seperlunya, lalu terbitkan sebagai milikmu.",
+    "claimCta": "Klaim & terbitkan",
+    "claimSignIn": "Masuk dengan Google untuk mengklaim",
+    "deadEnd": "Tautan undangan ini tidak valid, kedaluwarsa, atau sudah diklaim."
   }
 }
