@@ -139,6 +139,7 @@ export default async function ProductPage({
         ))}
         <Button
           size="sm"
+          variant="sticker"
           className="ml-auto cursor-pointer"
           nativeButton={false}
           render={

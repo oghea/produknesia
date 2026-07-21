@@ -9,7 +9,8 @@
     "signOut": "Sign out",
     "languageLabel": "Language",
     "profile": "My profile",
-    "admin": "Admin"
+    "admin": "Admin",
+    "theme": "Toggle theme"
   },
   "home": {
     "popular": "Popular",

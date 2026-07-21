@@ -1,56 +1,58 @@
-# Produknesia Design System — Master
+# Produknesia Design System — Master (v2)
 
-**Direction:** Warm Indonesian — light-first, warm off-white base, bold red primary
-(nod to merah-putih), amber accents. Clean Product Hunt density with local
-personality. **Light mode only** (dark mode removed by product decision 2026-07-20).
+**Direction:** Indonesian street-commerce meets product leaderboard. Crisp
+near-white paper, deep warm ink, *merah* red reserved strictly for actions.
+Dark mode = warm ink dark (not near-black-plus-acid). The design's boldness is
+spent in exactly two places (see Signatures); everything else stays quiet.
 
 ## Foundations
 
-- **Component base:** shadcn/ui (CSS-variable theming; semantic tokens only —
-  `bg-primary`, `text-muted-foreground`; never hardcoded Tailwind palette colors
-  in components).
-- **Motion:** Framer Motion (`motion` package). Global
-  `<MotionConfig reducedMotion="user">`. Animate 1–2 key elements per view max:
-  feed-list stagger entrance, vote-button spring, subtle fade-up on page mount.
-  150–300ms micro-interactions, ease-out entering / ease-in exiting.
-  Transform/opacity only — no width/height animation.
-- **Typography:** Space Grotesk (headings, `--font-heading`) + DM Sans (body,
-  `--font-sans`) via `next/font/google`. Body ≥16px, line-height 1.5–1.75.
-- **Icons:** Lucide only (ships with shadcn). No emoji icons.
+- **Component base:** shadcn/ui on Base UI primitives (`render` prop, not
+  `asChild`; link-rendering Buttons need `nativeButton={false}`; menu labels
+  live inside `DropdownMenuGroup`). Semantic tokens only.
+- **Motion:** Framer Motion (`motion`), global `MotionConfig reducedMotion="user"`.
+  Feed stagger + vote count roll only. Button presses are CSS (`active:translate`),
+  not JS animation.
+- **Typography:**
+  - Body: **Plus Jakarta Sans** (`--font-sans`) — by Tokotype, an Indonesian
+    foundry; the subject's own typography.
+  - Display: **Bricolage Grotesque** (`--font-heading`) — headings, wordmark,
+    rank numerals; heavy weights (bold/extrabold), used with restraint.
+- **Icons:** Lucide only.
 
-## Color tokens (light)
+## Signatures (the two allowed bold devices)
 
-| Token | Value | Use |
-|---|---|---|
-| `--background` | warm off-white (oklch ~0.985 0.008 85) | page |
-| `--foreground` | deep warm charcoal (stone-900) | text |
-| `--primary` | bold red `oklch(0.577 0.215 27)` (~#dc2626) | CTAs, vote-active, brand |
-| `--accent` | warm amber tint | hovers, highlights |
-| `--muted` | warm stone tint | secondary surfaces |
-| `--border` | visible warm gray (≥ gray-200 weight) | all borders |
+1. **Sticker press** — every red action (vote, submit, visit, sign-in CTA):
+   `border-2 border-foreground` + `shadow-hard-sm` (hard offset shadow, token
+   `--shadow-hard-sm`) and `active:translate-x-0.5 active:translate-y-0.5
+   active:shadow-none` so it physically sits down. Available as
+   `<Button variant="sticker">`. Never on secondary controls.
+2. **Rank numerals** — Popular feeds show `01 02 03…` in Bricolage extrabold
+   (`rank` prop on ProductCard); #1 in primary red, rest muted. Only where
+   order is real information (popular sort) — never on Newest/search/profile.
 
-Contrast: body text ≥4.5:1. Leftover `dark:` utilities in shadcn components
-are inert — the class-based `@custom-variant dark` is kept but never activated.
+## Color tokens
 
-## Rules (from ui-ux-pro-max, binding)
+Light: background near-white paper `oklch(0.99 0.003 90)`; ink foreground
+`oklch(0.185 0.012 50)`; primary merah `oklch(0.585 0.21 29)`; borders visible
+warm gray. Dark: warm ink base `oklch(0.175 0.01 50)`, brighter merah
+`oklch(0.66 0.19 29)`. `--hard-shadow-color` = ink (light) / near-black (dark).
+Red appears ONLY on: sticker actions, brand full stop, rank #1, voted state,
+destructive-adjacent semantics.
 
-- cursor-pointer + visible hover feedback on every interactive element; hover
-  must not shift layout (no scale on cards).
-- Visible focus rings (`focus-visible:ring-*`) on all interactives.
-- Touch targets ≥44px. Labels (or aria-label) on every input.
-- Skeletons/reserved space for async content; no content jumping.
-- Same `max-w-*` container across pages. Sticky header with backdrop blur;
-  content padded below it.
-- Responsive at 375 / 768 / 1024 / 1440. No horizontal scroll.
-- `prefers-reduced-motion` respected everywhere (MotionConfig + CSS).
+## Quiet layer (everything else)
 
-## Page notes
+- Cards: 1px border, no shadow, hover = `border-foreground/60`; name turns
+  primary on hover.
+- Tabs/pills: active = ink pill (`bg-foreground text-background`), never red.
+- Category chips: outline badges, hover = ink border.
+- Wordmark: `produknesia.` lowercase Bricolage extrabold, red full stop.
+- Empty states: dashed border, one icon, one line of direction.
 
-- **Feed:** compact hero strip (tagline + category chips), Tabs for
-  Popular/Newest, staggered card entrance.
-- **Cards:** shadcn Card, logo, name/tagline, maker; vote button on the right —
-  spring scale + count roll on toggle; voted state = filled primary.
-- **Detail:** larger vote CTA, gallery, prose description, styled comments.
-- **Forms (submit/admin):** shadcn Input/Textarea/Label/Button; server-action
-  flow unchanged (no RHF rearchitecture); errors inline near fields.
-- **Empty states:** friendly, icon + one line, never bare gray boxes.
+## Rules (binding)
+
+- cursor-pointer + hover feedback on every interactive element; hover never
+  shifts layout. Focus rings visible. Touch targets ≥44px. Inputs labeled.
+- Same `max-w-5xl` header / `max-w-2xl` content containers everywhere.
+- Responsive 375/768/1024/1440; no horizontal scroll.
+- `prefers-reduced-motion` respected. Body text ≥4.5:1 contrast in both modes.

@@ -34,22 +34,22 @@ export default async function Home({
     cn(
       "flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
       active
-        ? "bg-primary text-primary-foreground shadow-xs"
+        ? "bg-foreground text-background"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
       <FadeUp>
-        <h1 className="font-heading text-2xl font-bold sm:text-3xl">
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight sm:text-3xl">
           {t("app.tagline")}
         </h1>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {cats.map((c) => (
             <Badge
               key={c.id}
-              variant="secondary"
-              className="cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground"
+              variant="outline"
+              className="cursor-pointer transition-colors hover:border-foreground hover:text-foreground"
               render={<Link href={`/categories/${c.slug}`} />}
             >
               {locale === "id" ? c.nameId : c.nameEn}
@@ -76,12 +76,13 @@ export default async function Home({
         </div>
       ) : (
         <StaggerList className="mt-4 flex flex-col gap-3">
-          {items.map((item) => (
+          {items.map((item, i) => (
             <StaggerItem key={item.id}>
               <ProductCard
                 item={item}
                 locale={locale}
                 viewerVoted={votedIds.has(item.id)}
+                rank={sort === "popular" ? i + 1 : undefined}
               />
             </StaggerItem>
           ))}

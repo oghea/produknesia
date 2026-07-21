@@ -120,7 +120,7 @@ export function SubmitForm({
 
       <FieldError k={state.errors.form} />
 
-      <Button type="submit" disabled={pending} className="cursor-pointer">
+      <Button type="submit" variant="sticker" disabled={pending} className="cursor-pointer">
         {pending && (
           <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         )}

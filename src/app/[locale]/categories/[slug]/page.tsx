@@ -51,7 +51,7 @@ export default async function CategoryPage({
     cn(
       "flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
       active
-        ? "bg-primary text-primary-foreground shadow-xs"
+        ? "bg-foreground text-background"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
 
@@ -91,12 +91,13 @@ export default async function CategoryPage({
         </div>
       ) : (
         <StaggerList className="mt-6 flex flex-col gap-3">
-          {items.map((item) => (
+          {items.map((item, i) => (
             <StaggerItem key={item.id}>
               <ProductCard
                 item={item}
                 locale={locale}
                 viewerVoted={votedIds.has(item.id)}
+                rank={sort === "popular" ? i + 1 : undefined}
               />
             </StaggerItem>
           ))}

@@ -40,6 +40,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --shadow-hard: 3px 3px 0 var(--hard-shadow-color);
+  --shadow-hard-sm: 2px 2px 0 var(--hard-shadow-color);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -50,31 +52,33 @@
 }
 
 :root {
-  /* Warm Indonesian — light. Warm off-white base, bold merah primary. */
-  --background: oklch(0.984 0.005 85);
-  --foreground: oklch(0.216 0.01 55);
-  --card: oklch(0.998 0.002 85);
-  --card-foreground: oklch(0.216 0.01 55);
-  --popover: oklch(0.998 0.002 85);
-  --popover-foreground: oklch(0.216 0.01 55);
-  --primary: oklch(0.577 0.215 27);
-  --primary-foreground: oklch(0.985 0.008 85);
-  --secondary: oklch(0.955 0.01 80);
-  --secondary-foreground: oklch(0.28 0.012 55);
-  --muted: oklch(0.955 0.01 80);
-  --muted-foreground: oklch(0.49 0.015 60);
-  --accent: oklch(0.95 0.045 85);
-  --accent-foreground: oklch(0.34 0.05 45);
+  /* Produknesia v2 — crisp paper, deep warm ink, merah reserved for action. */
+  --background: oklch(0.99 0.003 90);
+  --foreground: oklch(0.185 0.012 50);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.185 0.012 50);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.185 0.012 50);
+  --primary: oklch(0.585 0.21 29);
+  --primary-foreground: oklch(0.99 0.005 90);
+  --secondary: oklch(0.955 0.008 85);
+  --secondary-foreground: oklch(0.25 0.012 50);
+  --muted: oklch(0.955 0.008 85);
+  --muted-foreground: oklch(0.47 0.015 55);
+  --accent: oklch(0.94 0.03 85);
+  --accent-foreground: oklch(0.3 0.04 50);
   --destructive: oklch(0.5 0.22 25);
-  --border: oklch(0.9 0.012 80);
-  --input: oklch(0.9 0.012 80);
-  --ring: oklch(0.7 0.12 30);
-  --chart-1: oklch(0.577 0.215 27);
+  --border: oklch(0.885 0.01 80);
+  --input: oklch(0.885 0.01 80);
+  --ring: oklch(0.585 0.21 29);
+  --chart-1: oklch(0.585 0.21 29);
   --chart-2: oklch(0.75 0.14 85);
-  --chart-3: oklch(0.65 0.13 155);
+  --chart-3: oklch(0.6 0.13 155);
   --chart-4: oklch(0.6 0.11 230);
   --chart-5: oklch(0.55 0.16 300);
   --radius: 0.625rem;
+  /* Sticker treatment: hard offset shadow color (ink in light, black in dark). */
+  --hard-shadow-color: oklch(0.185 0.012 50);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -85,6 +89,33 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+.dark {
+  /* Warm ink dark — not near-black-plus-acid. Merah brightens for contrast. */
+  --background: oklch(0.175 0.01 50);
+  --foreground: oklch(0.96 0.005 85);
+  --card: oklch(0.215 0.012 50);
+  --card-foreground: oklch(0.96 0.005 85);
+  --popover: oklch(0.215 0.012 50);
+  --popover-foreground: oklch(0.96 0.005 85);
+  --primary: oklch(0.66 0.19 29);
+  --primary-foreground: oklch(0.99 0.005 90);
+  --secondary: oklch(0.26 0.012 50);
+  --secondary-foreground: oklch(0.96 0.005 85);
+  --muted: oklch(0.26 0.012 50);
+  --muted-foreground: oklch(0.72 0.012 70);
+  --accent: oklch(0.29 0.025 60);
+  --accent-foreground: oklch(0.94 0.02 85);
+  --destructive: oklch(0.62 0.2 25);
+  --border: oklch(1 0 0 / 13%);
+  --input: oklch(1 0 0 / 17%);
+  --ring: oklch(0.66 0.19 29);
+  --chart-1: oklch(0.66 0.19 29);
+  --chart-2: oklch(0.8 0.13 85);
+  --chart-3: oklch(0.68 0.13 155);
+  --chart-4: oklch(0.65 0.11 230);
+  --chart-5: oklch(0.62 0.15 300);
+  --hard-shadow-color: oklch(0.08 0.005 50);
+}
 
 @layer base {
   * {

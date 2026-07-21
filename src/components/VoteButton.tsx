@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { ChevronUp } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { voteAction } from "@/app/actions/vote";
@@ -44,19 +44,20 @@ export function VoteButton({
   }
 
   return (
-    <motion.button
+    <button
       type="button"
       onClick={handleClick}
       disabled={pending}
       aria-pressed={voted}
       aria-label={`${voted ? t("voted") : t("label")} (${count})`}
-      whileTap={{ scale: 0.92 }}
       className={cn(
-        "flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center rounded-lg border font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60",
+        // Sticker press: hard ink border + offset shadow; the button
+        // physically sits down when tapped.
+        "flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-foreground font-semibold shadow-hard-sm transition-[translate,box-shadow,background-color,color] duration-100 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60",
         size === "lg" ? "gap-0.5 px-4 py-2 text-base" : "px-3 py-1.5 text-sm",
         voted
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border bg-card text-foreground hover:border-primary/50 hover:text-primary",
+          ? "bg-primary text-primary-foreground"
+          : "bg-card text-foreground hover:bg-accent",
       )}
     >
       <motion.span
@@ -64,9 +65,12 @@ export function VoteButton({
         animate={voted ? { y: [0, -3, 0] } : { y: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
       >
-        <ChevronUp className={size === "lg" ? "size-5" : "size-4"} />
+        <ChevronUp
+          className={size === "lg" ? "size-5" : "size-4"}
+          strokeWidth={3}
+        />
       </motion.span>
-      <span className="relative tabular-nums" aria-hidden="true">
+      <span className="relative font-heading tabular-nums" aria-hidden="true">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
             key={count}
@@ -80,6 +84,6 @@ export function VoteButton({
           </motion.span>
         </AnimatePresence>
       </span>
-    </motion.button>
+    </button>
   );
 }
