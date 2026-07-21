@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -37,10 +38,15 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
+  // Theme comes from a cookie so the server owns the `dark` class: React
+  // re-renders of <html> (e.g. locale switches) then preserve it instead
+  // of wiping a client-only class.
+  const theme = (await cookies()).get("theme")?.value;
+
   return (
     <html
       lang={locale}
-      className={`${fontSans.variable} ${fontHeading.variable}`}
+      className={`${fontSans.variable} ${fontHeading.variable}${theme === "dark" ? " dark" : ""}`}
       suppressHydrationWarning
     >
       <body>

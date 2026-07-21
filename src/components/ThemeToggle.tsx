@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
   const t = useTranslations("nav");
-  // null until mounted — the server can't know the theme, so render a
-  // stable placeholder first to avoid a hydration mismatch.
+  // null until mounted — the placeholder avoids a hydration mismatch.
   const [dark, setDark] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -18,11 +17,9 @@ export function ThemeToggle() {
   function toggle() {
     const next = !document.documentElement.classList.contains("dark");
     document.documentElement.classList.toggle("dark", next);
-    try {
-      localStorage.setItem("theme", next ? "dark" : "light");
-    } catch {
-      // Private-mode storage failures shouldn't break the toggle.
-    }
+    // Cookie (not localStorage) so the server renders the class into <html>
+    // and locale-switch re-renders of the root layout can't wipe it.
+    document.cookie = `theme=${next ? "dark" : "light"}; path=/; max-age=31536000; samesite=lax`;
     setDark(next);
   }
 
