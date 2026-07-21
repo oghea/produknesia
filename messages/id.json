@@ -120,7 +120,10 @@
     "rejectedBadge": "Ditolak: {reason}",
     "noReason": "tidak diberikan"
   },
-  "watch": { "label": "Pantau", "watching": "Dipantau" },
+  "watch": {
+    "label": "Pantau",
+    "watching": "Dipantau"
+  },
   "unwatch": {
     "done": "Kamu tidak akan menerima pembaruan produk ini lagi.",
     "invalid": "Tautan berhenti berlangganan ini tidak valid atau sudah dipakai."
@@ -144,6 +147,8 @@
     "claimIntro": "Kami sudah menyiapkan listing ini untukmu. Masuk, sesuaikan seperlunya, lalu terbitkan sebagai milikmu.",
     "claimCta": "Klaim & terbitkan",
     "claimSignIn": "Masuk dengan Google untuk mengklaim",
-    "deadEnd": "Tautan undangan ini tidak valid, kedaluwarsa, atau sudah diklaim."
+    "deadEnd": "Tautan undangan ini tidak valid, kedaluwarsa, atau sudah diklaim.",
+    "keepLogo": "Logo saat ini — tetap dipakai kecuali kamu memilih berkas baru.",
+    "keepScreenshots": "Tangkapan layar saat ini — tetap dipakai kecuali kamu memilih berkas baru (berkas baru mengganti semuanya)."
   }
 }

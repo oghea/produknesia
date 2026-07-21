@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { submitProduct, type SubmitState } from "@/app/[locale]/submit/actions";
@@ -36,6 +37,8 @@ export function SubmitForm({
   submitLabel,
   noteField = false,
   hiddenFields,
+  currentLogoUrl,
+  currentScreenshotUrls,
 }: {
   categories: { id: string; label: string }[];
   action?: (prev: SubmitState, fd: FormData) => Promise<SubmitState>;
@@ -43,6 +46,10 @@ export function SubmitForm({
   submitLabel?: string;
   noteField?: boolean;
   hiddenFields?: Record<string, string>;
+  /** Images already attached (e.g. an invite draft) — kept server-side
+   * unless the user picks replacements; shown so the form says so. */
+  currentLogoUrl?: string;
+  currentScreenshotUrls?: string[];
 }) {
   const t = useTranslations("submit");
   const tInvites = useTranslations("invites");
@@ -157,6 +164,20 @@ export function SubmitForm({
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="submit-logo">{t("logo")}</Label>
+        {currentLogoUrl && (
+          <div className="flex items-center gap-3 rounded-lg border border-dashed p-3">
+            <Image
+              src={currentLogoUrl}
+              alt=""
+              width={48}
+              height={48}
+              className="size-12 shrink-0 rounded-lg border object-cover"
+            />
+            <p className="text-sm text-muted-foreground">
+              {tInvites("keepLogo")}
+            </p>
+          </div>
+        )}
         <Input
           id="submit-logo"
           name="logo"
@@ -168,6 +189,25 @@ export function SubmitForm({
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="submit-screenshots">{t("screenshots")}</Label>
+        {currentScreenshotUrls && currentScreenshotUrls.length > 0 && (
+          <div className="flex flex-col gap-2 rounded-lg border border-dashed p-3">
+            <div className="flex gap-2 overflow-x-auto">
+              {currentScreenshotUrls.map((url) => (
+                <Image
+                  key={url}
+                  src={url}
+                  alt=""
+                  width={120}
+                  height={68}
+                  className="h-16 w-auto shrink-0 rounded-md border object-cover"
+                />
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {tInvites("keepScreenshots")}
+            </p>
+          </div>
+        )}
         <Input
           id="submit-screenshots"
           name="screenshots"

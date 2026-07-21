@@ -120,7 +120,10 @@
     "rejectedBadge": "Rejected: {reason}",
     "noReason": "not provided"
   },
-  "watch": { "label": "Watch", "watching": "Watching" },
+  "watch": {
+    "label": "Watch",
+    "watching": "Watching"
+  },
   "unwatch": {
     "done": "You will no longer receive updates for this product.",
     "invalid": "This unsubscribe link is invalid or already used."
@@ -144,6 +147,8 @@
     "claimIntro": "We prepared this listing for you. Sign in, adjust anything you like, and publish it as yours.",
     "claimCta": "Claim & publish",
     "claimSignIn": "Sign in with Google to claim",
-    "deadEnd": "This invite link is invalid, expired, or already claimed."
+    "deadEnd": "This invite link is invalid, expired, or already claimed.",
+    "keepLogo": "Current logo — it stays unless you choose a new file.",
+    "keepScreenshots": "Current screenshots — they stay unless you choose new files (new files replace all of them)."
   }
 }

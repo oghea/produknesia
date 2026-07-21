@@ -139,6 +139,8 @@ async function ClaimForm({
         categoryIds: draft.categoryIds,
       }}
       hiddenFields={{ inviteToken: token }}
+      currentLogoUrl={draft.logoUrl}
+      currentScreenshotUrls={draft.screenshotUrls}
     />
   );
 }
