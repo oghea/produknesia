@@ -40,9 +40,11 @@ export default async function CategoryPage({
   const category = await getCategory(slug);
   if (!category) notFound();
 
-  const t = await getTranslations();
-  const items = await listProductsByCategory(category.id, sort);
-  const session = await auth();
+  const [t, items, session] = await Promise.all([
+    getTranslations(),
+    listProductsByCategory(category.id, sort),
+    auth(),
+  ]);
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
     : new Set<string>();

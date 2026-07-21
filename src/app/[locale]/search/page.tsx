@@ -34,8 +34,10 @@ export default async function SearchPage({
   const t = await getTranslations("search");
   const query = q.trim().slice(0, 100);
 
-  const items = await searchProducts(query);
-  const session = await auth();
+  const [items, session] = await Promise.all([
+    searchProducts(query),
+    auth(),
+  ]);
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
     : new Set<string>();

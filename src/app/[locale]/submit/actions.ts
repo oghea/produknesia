@@ -45,9 +45,10 @@ export async function submitProduct(
   }
 
   try {
-    const logoUrl = logoFiles[0] ? await putImage(logoFiles[0]) : undefined;
-    const screenshotUrls: string[] = [];
-    for (const f of screenshotFiles) screenshotUrls.push(await putImage(f));
+    const [logoUrl, screenshotUrls] = await Promise.all([
+      logoFiles[0] ? putImage(logoFiles[0]) : undefined,
+      Promise.all(screenshotFiles.map((f) => putImage(f))),
+    ]);
 
     await createProduct({
       ...parsed.data,

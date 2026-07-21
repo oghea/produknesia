@@ -55,10 +55,8 @@ export default async function ProfilePage({
   params: Promise<{ locale: string; username: string }>;
 }) {
   const { locale, username } = await params;
-  const profile = await getProfile(username);
+  const [profile, session] = await Promise.all([getProfile(username), auth()]);
   if (!profile) notFound();
-
-  const session = await auth();
   const isOwn = session?.user?.id === profile.id;
   const canSeeAll = isOwn || isAdmin(session);
 

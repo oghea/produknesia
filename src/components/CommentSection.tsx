@@ -10,10 +10,12 @@ import { CommentForm } from "./CommentForm";
 async function Comment({
   comment,
   canDelete,
+  slug,
   children,
 }: {
   comment: CommentItem;
   canDelete: boolean;
+  slug: string;
   children?: React.ReactNode;
 }) {
   const t = await getTranslations("comments");
@@ -36,6 +38,7 @@ async function Comment({
           {canDelete && !comment.isDeleted && (
             <form action={deleteCommentAction} className="ml-auto">
               <input type="hidden" name="commentId" value={comment.id} />
+              <input type="hidden" name="slug" value={slug} />
               <button
                 type="submit"
                 aria-label={t("delete")}
@@ -121,10 +124,15 @@ export async function CommentSection({
 
       <div className="mt-8 flex flex-col gap-7">
         {topLevel.map((c) => (
-          <Comment key={c.id} comment={c} canDelete={canDelete(c)}>
+          <Comment key={c.id} comment={c} canDelete={canDelete(c)} slug={slug}>
             <div className="mt-3 flex flex-col gap-4 border-l-2 border-border/70 pl-4">
               {repliesFor(c.id).map((r) => (
-                <Comment key={r.id} comment={r} canDelete={canDelete(r)} />
+                <Comment
+                  key={r.id}
+                  comment={r}
+                  canDelete={canDelete(r)}
+                  slug={slug}
+                />
               ))}
               {isAuthenticated && !c.isDeleted && (
                 <CommentForm productId={productId} slug={slug} parentId={c.id} />

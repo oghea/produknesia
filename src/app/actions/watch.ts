@@ -17,6 +17,7 @@ export async function watchAction(
     return null; // unreachable — signIn redirects
   }
   const result = await toggleWatch(productId, session.user.id);
-  revalidatePath("/", "layout");
+  const locale = await getLocale();
+  revalidatePath(localePath(locale, currentPath));
   return result;
 }

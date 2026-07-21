@@ -18,6 +18,10 @@ export async function voteAction(
     return null; // unreachable — signIn redirects — but satisfies the type
   }
   const result = await toggleVote(productId, session.user.id);
-  revalidatePath("/", "layout");
+  // High-frequency action: refresh only the page the voter is on. Every
+  // page is dynamically rendered, so other routes pick the count up on
+  // their next visit anyway.
+  const locale = await getLocale();
+  revalidatePath(localePath(locale, currentPath));
   return result;
 }

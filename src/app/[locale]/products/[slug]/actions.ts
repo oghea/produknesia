@@ -37,7 +37,8 @@ export async function addCommentAction(
   });
   if (!created) return { ok: false, errors: { body: "validation.formError" } };
 
-  revalidatePath("/", "layout");
+  const locale = await getLocale();
+  revalidatePath(localePath(locale, `/products/${slug}`));
   return { ok: true, errors: {} };
 }
 
@@ -45,9 +46,11 @@ export async function deleteCommentAction(formData: FormData): Promise<void> {
   const session = await auth();
   if (!session?.user) return;
   const commentId = String(formData.get("commentId") ?? "");
+  const slug = String(formData.get("slug") ?? "");
   if (!commentId) return;
   await softDeleteComment(commentId, session.user.id, isAdmin(session));
-  revalidatePath("/", "layout");
+  const locale = await getLocale();
+  revalidatePath(localePath(locale, `/products/${slug}`));
 }
 
 export type UpdateState = { ok: boolean; errors: Record<string, string> };
@@ -76,7 +79,7 @@ export async function postUpdateAction(
   );
   if (!created) return { ok: false, errors: { form: "validation.formError" } };
 
-  revalidatePath("/", "layout");
   const locale = await getLocale();
+  revalidatePath(localePath(locale, `/products/${slug}`));
   redirect(localePath(locale, `/products/${slug}?update=1`));
 }

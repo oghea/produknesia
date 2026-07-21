@@ -50,11 +50,10 @@ export default async function ProductPage({
 }) {
   const { locale, slug } = await params;
   const { update } = await searchParams;
-  const detail = await getDetail(slug);
+  const [detail, session] = await Promise.all([getDetail(slug), auth()]);
   if (!detail) notFound();
 
   const { product, makerName, makerUsername, images, categories } = detail;
-  const session = await auth();
   const viewerIsMaker = session?.user?.id === product.makerId;
   const viewerIsAdmin = isAdmin(session);
 
@@ -62,22 +61,21 @@ export default async function ProductPage({
     notFound();
   }
 
-  const votedIds = session?.user
-    ? await getVotedProductIds(session.user.id, [product.id])
-    : new Set<string>();
-  const watching = session?.user
-    ? await isWatching(product.id, session.user.id)
-    : false;
-
-  const productComments =
-    product.status === "approved" ? await listComments(product.id) : [];
-  const updates =
-    product.status === "approved"
-      ? await listUpdatesForProduct(product.id, viewerIsMaker || viewerIsAdmin)
-      : [];
-
-  const t = await getTranslations("product");
-  const tUpdates = await getTranslations("updates");
+  // One parallel batch instead of four sequential DB round trips.
+  const isApproved = product.status === "approved";
+  const [votedIds, watching, productComments, updates, t, tUpdates] =
+    await Promise.all([
+      session?.user
+        ? getVotedProductIds(session.user.id, [product.id])
+        : new Set<string>(),
+      session?.user ? isWatching(product.id, session.user.id) : false,
+      isApproved ? listComments(product.id) : [],
+      isApproved
+        ? listUpdatesForProduct(product.id, viewerIsMaker || viewerIsAdmin)
+        : [],
+      getTranslations("product"),
+      getTranslations("updates"),
+    ]);
   const { tagline, description } = pickLocalized(product, locale);
 
   return (
