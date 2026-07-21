@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, lt, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import type { DBClient } from "@/db/types";
 import {
@@ -215,6 +215,56 @@ export async function countApprovedProducts(
     .from(products)
     .where(eq(products.status, "approved"));
   return row.n;
+}
+
+export const FEED_PAGE_SIZE = 30;
+
+function decodeCursor(cursor: string): { at: Date; id: string } | null {
+  const sep = cursor.lastIndexOf("_");
+  if (sep <= 0) return null;
+  const at = new Date(cursor.slice(0, sep));
+  const id = cursor.slice(sep + 1);
+  if (Number.isNaN(at.getTime()) || !id) return null;
+  return { at, id };
+}
+
+export async function listFeedPage(
+  cursor: string | null,
+  dbc: DBClient = db,
+): Promise<{ items: FeedItem[]; nextCursor: string | null }> {
+  const decoded = cursor ? decodeCursor(cursor) : null;
+  const base = and(
+    eq(products.status, "approved"),
+    isNotNull(products.launchedAt),
+  );
+  const where = decoded
+    ? and(
+        base,
+        or(
+          lt(products.launchedAt, decoded.at),
+          and(
+            eq(products.launchedAt, decoded.at),
+            lt(products.id, decoded.id),
+          ),
+        ),
+      )
+    : base;
+
+  const rows = await dbc
+    .select(feedColumns)
+    .from(products)
+    .innerJoin(users, eq(products.makerId, users.id))
+    .where(where)
+    .orderBy(desc(products.launchedAt), desc(products.id))
+    .limit(FEED_PAGE_SIZE + 1);
+
+  const items = rows.slice(0, FEED_PAGE_SIZE);
+  const last = items[items.length - 1];
+  const nextCursor =
+    rows.length > FEED_PAGE_SIZE && last?.launchedAt
+      ? `${last.launchedAt.toISOString()}_${last.id}`
+      : null;
+  return { items, nextCursor };
 }
 
 export async function rejectProduct(
