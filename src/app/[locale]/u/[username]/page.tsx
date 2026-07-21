@@ -1,11 +1,13 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { CalendarDays, ChevronUp, Package } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
+import { isComingSoon } from "@/lib/launch";
+import { localePath } from "@/i18n/locale-path";
 import {
   getUserByUsername,
   listProductsByMaker,
@@ -55,7 +57,11 @@ export default async function ProfilePage({
   params: Promise<{ locale: string; username: string }>;
 }) {
   const { locale, username } = await params;
-  const [profile, session] = await Promise.all([getProfile(username), auth()]);
+
+  const session = await auth();
+  if (isComingSoon() && !isAdmin(session)) redirect(localePath(locale, "/"));
+
+  const profile = await getProfile(username);
   if (!profile) notFound();
   const isOwn = session?.user?.id === profile.id;
   const canSeeAll = isOwn || isAdmin(session);
