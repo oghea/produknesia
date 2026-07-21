@@ -5,12 +5,20 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
 import { listPending } from "@/db/queries/products";
+import { listPendingUpdates } from "@/db/queries/updates";
 import { Link } from "@/i18n/navigation";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { approveAction, rejectAction } from "./actions";
+import {
+  approveAction,
+  approveUpdateAction,
+  rejectAction,
+  rejectUpdateAction,
+} from "./actions";
 import { localePath } from "@/i18n/locale-path";
+import { pickLocalizedPair } from "@/lib/locale-content";
 
 export default async function AdminPage({
   params,
@@ -22,7 +30,11 @@ export default async function AdminPage({
   if (!isAdmin(session)) redirect(localePath(locale, "/"));
 
   const t = await getTranslations("admin");
-  const pending = await listPending();
+  const tUpdates = await getTranslations("adminUpdates");
+  const [pending, pendingUpdates] = await Promise.all([
+    listPending(),
+    listPendingUpdates(),
+  ]);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
@@ -94,6 +106,76 @@ export default async function AdminPage({
                     placeholder={t("reasonPlaceholder")}
                     aria-label={t("reasonPlaceholder")}
                     className="h-8 flex-1 text-sm"
+                  />
+                  <Button
+                    type="submit"
+                    size="sm"
+                    variant="destructive"
+                    className="cursor-pointer"
+                  >
+                    <X className="size-4" aria-hidden="true" />
+                    {t("reject")}
+                  </Button>
+                </form>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <h2 className="mt-12 font-heading text-xl font-bold">
+        {tUpdates("title")}
+      </h2>
+
+      {pendingUpdates.length === 0 && (
+        <p className="mt-4 rounded-xl border border-dashed p-6 text-center text-base text-muted-foreground">
+          {tUpdates("empty")}
+        </p>
+      )}
+
+      <div className="mt-4 flex flex-col gap-4">
+        {pendingUpdates.map((u) => (
+          <Card key={u.id} className="py-0 shadow-xs">
+            <CardContent className="p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-heading font-bold">{u.productName}</span>
+                {u.version && <Badge variant="secondary">{u.version}</Badge>}
+                <span className="text-sm text-muted-foreground">
+                  {pickLocalizedPair(u.titleId, u.titleEn, locale)}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="ml-auto cursor-pointer"
+                  nativeButton={false}
+                  render={<Link href={`/products/${u.productSlug}`} />}
+                >
+                  {t("view")}
+                  <ExternalLink className="size-3.5" aria-hidden="true" />
+                </Button>
+              </div>
+              <p className="mt-2 line-clamp-3 whitespace-pre-wrap text-sm text-muted-foreground">
+                {(u.bodyId ?? u.bodyEn ?? "").slice(0, 400)}
+              </p>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-start">
+                <form action={approveUpdateAction}>
+                  <input type="hidden" name="id" value={u.id} />
+                  <Button
+                    type="submit"
+                    size="sm"
+                    className="w-full cursor-pointer bg-chart-3 text-white hover:bg-chart-3/85 sm:w-auto"
+                  >
+                    <Check className="size-4" aria-hidden="true" />
+                    {t("approve")}
+                  </Button>
+                </form>
+                <form action={rejectUpdateAction} className="flex flex-1 gap-2">
+                  <input type="hidden" name="id" value={u.id} />
+                  <Input
+                    name="reason"
+                    placeholder={t("reasonPlaceholder")}
+                    aria-label={t("reasonPlaceholder")}
+                    className="h-9 flex-1 text-sm"
                   />
                   <Button
                     type="submit"
