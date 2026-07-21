@@ -120,5 +120,14 @@
     "pendingBadge": "Under review",
     "rejectedBadge": "Rejected: {reason}",
     "noReason": "not provided"
+  },
+  "watch": { "label": "Watch", "watching": "Watching" },
+  "unwatch": {
+    "done": "You will no longer receive updates for this product.",
+    "invalid": "This unsubscribe link is invalid or already used."
+  },
+  "adminUpdates": {
+    "title": "Pending updates",
+    "empty": "No pending updates."
   }
 }

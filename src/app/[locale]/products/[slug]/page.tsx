@@ -12,8 +12,10 @@ import { getProductBySlug } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { listComments } from "@/db/queries/comments";
 import { listUpdatesForProduct } from "@/db/queries/updates";
+import { isWatching } from "@/db/queries/watches";
 import { pickLocalized } from "@/lib/locale-content";
 import { VoteButton } from "@/components/VoteButton";
+import { WatchButton } from "@/components/WatchButton";
 import { CommentSection } from "@/components/CommentSection";
 import { ProductUpdates } from "@/components/ProductUpdates";
 import { FadeUp } from "@/components/motion-primitives";
@@ -63,6 +65,9 @@ export default async function ProductPage({
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, [product.id])
     : new Set<string>();
+  const watching = session?.user
+    ? await isWatching(product.id, session.user.id)
+    : false;
 
   const productComments =
     product.status === "approved" ? await listComments(product.id) : [];
@@ -165,6 +170,9 @@ export default async function ProductPage({
               <Megaphone className="size-4" aria-hidden="true" />
               {tUpdates("post")}
             </Button>
+          )}
+          {product.status === "approved" && (
+            <WatchButton productId={product.id} initialWatching={watching} />
           )}
           <Button
             size="sm"

@@ -120,5 +120,14 @@
     "pendingBadge": "Sedang ditinjau",
     "rejectedBadge": "Ditolak: {reason}",
     "noReason": "tidak diberikan"
+  },
+  "watch": { "label": "Pantau", "watching": "Dipantau" },
+  "unwatch": {
+    "done": "Kamu tidak akan menerima pembaruan produk ini lagi.",
+    "invalid": "Tautan berhenti berlangganan ini tidak valid atau sudah dipakai."
+  },
+  "adminUpdates": {
+    "title": "Pembaruan menunggu",
+    "empty": "Tidak ada pembaruan menunggu."
   }
 }
