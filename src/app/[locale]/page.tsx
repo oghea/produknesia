@@ -31,7 +31,6 @@ export default async function Home({
   if (isComingSoon() && !isAdmin(session)) {
     return <Landing />;
   }
-  const cats = await listCategories();
 
   const tabCls = (active: boolean) =>
     cn(
@@ -42,8 +41,14 @@ export default async function Home({
     );
 
   let feedBody: ReactNode;
+  let cats;
+
   if (isPopular) {
-    const items = await listFeed("popular");
+    const [items, catsResult] = await Promise.all([
+      listFeed("popular"),
+      listCategories(),
+    ]);
+    cats = catsResult;
     const votedIds = session?.user
       ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
       : new Set<string>();
@@ -69,7 +74,11 @@ export default async function Home({
         </StaggerList>
       );
   } else {
-    const page = await listFeedPage(null);
+    const [page, catsResult] = await Promise.all([
+      listFeedPage(null),
+      listCategories(),
+    ]);
+    cats = catsResult;
     const initialItems = await serializeFeedItems(page.items);
 
     feedBody =
