@@ -110,3 +110,85 @@ describe("parseCommentForm", () => {
     if (!r.ok) expect(r.errors.body).toBe("validation.commentTooLong");
   });
 });
+
+import { parseUpdateForm, inviteDraftSchema } from "./validation";
+
+describe("parseUpdateForm", () => {
+  function updForm(entries: Record<string, string>): FormData {
+    const fd = new FormData();
+    for (const [k, v] of Object.entries(entries)) fd.append(k, v);
+    return fd;
+  }
+
+  it("accepts version + one-language title/body", () => {
+    const r = parseUpdateForm(
+      updForm({ version: "v1.2.0", titleId: "Fitur baru", bodyId: "Detail…" }),
+    );
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.version).toBe("v1.2.0");
+      expect(r.data.titleEn).toBeUndefined();
+    }
+  });
+
+  it("accepts a missing version", () => {
+    expect(
+      parseUpdateForm(updForm({ titleEn: "New", bodyEn: "Details" })).ok,
+    ).toBe(true);
+  });
+
+  it("requires at least one title", () => {
+    const r = parseUpdateForm(updForm({ bodyId: "x" }));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.titleId).toBe("validation.updateTitleRequired");
+  });
+
+  it("requires at least one body", () => {
+    const r = parseUpdateForm(updForm({ titleId: "x" }));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.bodyId).toBe("validation.updateBodyRequired");
+  });
+
+  it("rejects an over-long version", () => {
+    const r = parseUpdateForm(
+      updForm({ version: "v".repeat(31), titleId: "x", bodyId: "y" }),
+    );
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.version).toBe("validation.tooLong");
+  });
+});
+
+describe("inviteDraftSchema", () => {
+  const base = {
+    name: "Kopi Kirim",
+    taglineId: "Kirim kopi",
+    websiteUrl: "https://kopikirim.id",
+    categoryIds: ["cat1"],
+    screenshotUrls: [],
+  };
+
+  it("accepts a valid draft with images", () => {
+    const r = inviteDraftSchema.safeParse({
+      ...base,
+      logoUrl: "/uploads/a.png",
+      screenshotUrls: ["/uploads/b.png"],
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("applies the same product rules (scheme check)", () => {
+    const r = inviteDraftSchema.safeParse({
+      ...base,
+      websiteUrl: "javascript:alert(1)",
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it("rejects more than 4 screenshots", () => {
+    const r = inviteDraftSchema.safeParse({
+      ...base,
+      screenshotUrls: ["a", "b", "c", "d", "e"],
+    });
+    expect(r.success).toBe(false);
+  });
+});

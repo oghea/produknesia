@@ -52,7 +52,9 @@
     "logoSingle": "Only one logo file is allowed.",
     "formError": "Something went wrong. Check the fields and try again.",
     "commentRequired": "Comment cannot be empty.",
-    "commentTooLong": "Comment is too long (max 2000 characters)."
+    "commentTooLong": "Comment is too long (max 2000 characters).",
+    "updateTitleRequired": "Fill in at least one title.",
+    "updateBodyRequired": "Fill in at least one body."
   },
   "comments": {
     "title": "Comments ({count})",
@@ -101,5 +103,47 @@
     "noUpvotes": "No upvotes yet.",
     "statusPending": "Under review",
     "statusRejected": "Rejected"
+  },
+  "updates": {
+    "title": "Updates",
+    "post": "Post update",
+    "formTitle": "Post an update",
+    "version": "Version (optional)",
+    "titleId": "Title (Indonesian)",
+    "titleEn": "Title (English)",
+    "bodyId": "What's new (Indonesian, markdown)",
+    "bodyEn": "What's new (English, markdown)",
+    "pairHint": "Fill at least one language for the title and the body.",
+    "send": "Submit for review",
+    "success": "Submitted! Your update is waiting for review.",
+    "pendingBadge": "Under review",
+    "rejectedBadge": "Rejected: {reason}",
+    "noReason": "not provided"
+  },
+  "watch": { "label": "Watch", "watching": "Watching" },
+  "unwatch": {
+    "done": "You will no longer receive updates for this product.",
+    "invalid": "This unsubscribe link is invalid or already used."
+  },
+  "adminUpdates": {
+    "title": "Pending updates",
+    "empty": "No pending updates."
+  },
+  "invites": {
+    "title": "Invites",
+    "new": "New invite",
+    "note": "Who is this for? (private note)",
+    "create": "Create invite link",
+    "created": "Invite created — copy the link below.",
+    "copy": "Copy link",
+    "copied": "Copied!",
+    "open": "Open",
+    "claimed": "Claimed by {name}",
+    "expired": "Expired",
+    "claimTitle": "You're invited to launch on Produknesia",
+    "claimIntro": "We prepared this listing for you. Sign in, adjust anything you like, and publish it as yours.",
+    "claimCta": "Claim & publish",
+    "claimSignIn": "Sign in with Google to claim",
+    "deadEnd": "This invite link is invalid, expired, or already claimed."
   }
 }

@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { products, users, votes } from "./schema";
+import {
+  products,
+  users,
+  votes,
+  productUpdates,
+  productWatches,
+  invites,
+} from "./schema";
 import { getTableColumns } from "drizzle-orm";
 import { getTableConfig } from "drizzle-orm/pg-core";
 
@@ -30,6 +37,40 @@ describe("schema", () => {
     expect(uniq).toBeDefined();
     expect(uniq!.config.columns.map((c: any) => c.name)).toEqual(
       expect.arrayContaining(["product_id", "user_id"]),
+    );
+  });
+});
+
+describe("phase 5 tables", () => {
+  it("productUpdates has status defaulting to pending", () => {
+    const cols = getTableColumns(productUpdates);
+    expect(cols.status.default).toBe("pending");
+    expect(Object.keys(cols)).toEqual(
+      expect.arrayContaining([
+        "id", "productId", "authorId", "version",
+        "titleId", "titleEn", "bodyId", "bodyEn",
+        "status", "rejectionReason", "publishedAt", "createdAt",
+      ]),
+    );
+  });
+
+  it("productWatches enforces one watch per user+product", () => {
+    const cols = Object.keys(getTableColumns(productWatches));
+    expect(cols).toEqual(
+      expect.arrayContaining(["productId", "userId", "unsubscribeToken"]),
+    );
+    const cfg = getTableConfig(productWatches);
+    const uniq = cfg.indexes.find((i) => i.config.unique);
+    expect(uniq).toBeDefined();
+  });
+
+  it("invites carries a jsonb draft and claim columns", () => {
+    const cols = Object.keys(getTableColumns(invites));
+    expect(cols).toEqual(
+      expect.arrayContaining([
+        "token", "draft", "note", "createdBy",
+        "expiresAt", "claimedBy", "claimedProductId", "claimedAt",
+      ]),
     );
   });
 });

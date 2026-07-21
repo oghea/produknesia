@@ -2,7 +2,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Clock, ExternalLink, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, ExternalLink, Megaphone, XCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import ReactMarkdown from "react-markdown";
 import { auth } from "@/auth";
@@ -11,9 +11,13 @@ import { isAdmin } from "@/auth-helpers";
 import { getProductBySlug } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { listComments } from "@/db/queries/comments";
+import { listUpdatesForProduct } from "@/db/queries/updates";
+import { isWatching } from "@/db/queries/watches";
 import { pickLocalized } from "@/lib/locale-content";
 import { VoteButton } from "@/components/VoteButton";
+import { WatchButton } from "@/components/WatchButton";
 import { CommentSection } from "@/components/CommentSection";
+import { ProductUpdates } from "@/components/ProductUpdates";
 import { FadeUp } from "@/components/motion-primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,10 +43,13 @@ export async function generateMetadata({
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<{ update?: string }>;
 }) {
   const { locale, slug } = await params;
+  const { update } = await searchParams;
   const detail = await getDetail(slug);
   if (!detail) notFound();
 
@@ -58,11 +65,19 @@ export default async function ProductPage({
   const votedIds = session?.user
     ? await getVotedProductIds(session.user.id, [product.id])
     : new Set<string>();
+  const watching = session?.user
+    ? await isWatching(product.id, session.user.id)
+    : false;
 
   const productComments =
     product.status === "approved" ? await listComments(product.id) : [];
+  const updates =
+    product.status === "approved"
+      ? await listUpdatesForProduct(product.id, viewerIsMaker || viewerIsAdmin)
+      : [];
 
   const t = await getTranslations("product");
+  const tUpdates = await getTranslations("updates");
   const { tagline, description } = pickLocalized(product, locale);
 
   return (
@@ -79,6 +94,12 @@ export default async function ProductPage({
           {t("rejectedBanner", {
             reason: product.rejectionReason ?? t("noReason"),
           })}
+        </p>
+      )}
+      {update === "1" && (
+        <p className="mb-6 flex items-center gap-2 rounded-lg border border-chart-3/40 bg-chart-3/10 p-3 text-sm">
+          <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
+          {tUpdates("success")}
         </p>
       )}
 
@@ -137,21 +158,38 @@ export default async function ProductPage({
             {locale === "id" ? c.nameId : c.nameEn}
           </Badge>
         ))}
-        <Button
-          size="sm"
-          className="ml-auto cursor-pointer"
-          nativeButton={false}
-          render={
-            <a
-              href={product.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-          }
-        >
-          {t("visit")}
-          <ExternalLink className="size-3.5" aria-hidden="true" />
-        </Button>
+        <div className="ml-auto flex items-center gap-2">
+          {product.status === "approved" && (viewerIsMaker || viewerIsAdmin) && (
+            <Button
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              className="cursor-pointer"
+              render={<Link href={`/products/${product.slug}/updates/new`} />}
+            >
+              <Megaphone className="size-4" aria-hidden="true" />
+              {tUpdates("post")}
+            </Button>
+          )}
+          {product.status === "approved" && (
+            <WatchButton productId={product.id} initialWatching={watching} />
+          )}
+          <Button
+            size="sm"
+            className="cursor-pointer"
+            nativeButton={false}
+            render={
+              <a
+                href={product.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+          >
+            {t("visit")}
+            <ExternalLink className="size-3.5" aria-hidden="true" />
+          </Button>
+        </div>
       </div>
 
       {description && (
@@ -174,6 +212,8 @@ export default async function ProductPage({
           ))}
         </div>
       )}
+
+      <ProductUpdates updates={updates} locale={locale} />
 
       {product.status === "approved" && (
         <CommentSection

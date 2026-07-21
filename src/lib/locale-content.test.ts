@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pickLocalized } from "./locale-content";
+import { pickLocalized, pickLocalizedPair } from "./locale-content";
 
 const row = {
   taglineId: "Kirim kopi",
@@ -28,5 +28,14 @@ describe("pickLocalized", () => {
         "id",
       ).tagline,
     ).toBeNull();
+  });
+});
+
+describe("pickLocalizedPair", () => {
+  it("prefers the viewer locale and falls back", () => {
+    expect(pickLocalizedPair("halo", null, "en")).toBe("halo");
+    expect(pickLocalizedPair("halo", "hello", "en")).toBe("hello");
+    expect(pickLocalizedPair(null, "hello", "id")).toBe("hello");
+    expect(pickLocalizedPair(null, null, "id")).toBeNull();
   });
 });
