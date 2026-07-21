@@ -8,6 +8,13 @@
       "when": 1784565680085,
       "tag": "0000_outgoing_anthem",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1784657939294,
+      "tag": "0001_wakeful_starhawk",
+      "breakpoints": true
     }
   ]
 }

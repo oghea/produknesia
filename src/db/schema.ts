@@ -7,6 +7,7 @@ import {
   boolean,
   uniqueIndex,
   index,
+  jsonb,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
@@ -197,3 +198,83 @@ export const comments = pgTable(
     parentIdx: index("comments_parent_idx").on(t.parentId),
   }),
 );
+
+// ---- Phase 5: engagement ----
+export const productUpdates = pgTable(
+  "product_updates",
+  {
+    id: id(),
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    authorId: text("author_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    version: text("version"),
+    titleId: text("title_id"),
+    titleEn: text("title_en"),
+    bodyId: text("body_id"),
+    bodyEn: text("body_en"),
+    status: text("status").notNull().default("pending"), // pending|approved|rejected
+    rejectionReason: text("rejection_reason"),
+    publishedAt: timestamp("published_at", { withTimezone: true, mode: "date" }),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    productStatusIdx: index("product_updates_product_status_idx").on(
+      t.productId,
+      t.status,
+      t.publishedAt,
+    ),
+    statusIdx: index("product_updates_status_idx").on(t.status),
+  }),
+);
+
+export const productWatches = pgTable(
+  "product_watches",
+  {
+    id: id(),
+    productId: text("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    unsubscribeToken: text("unsubscribe_token")
+      .notNull()
+      .unique()
+      .$defaultFn(() => createId()),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    uniqUserProduct: uniqueIndex("watches_user_product_uniq").on(
+      t.productId,
+      t.userId,
+    ),
+    userIdx: index("watches_user_idx").on(t.userId),
+  }),
+);
+
+export const invites = pgTable("invites", {
+  id: id(),
+  token: text("token")
+    .notNull()
+    .unique()
+    .$defaultFn(() => createId()),
+  draft: jsonb("draft").notNull(),
+  note: text("note"),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
+  claimedBy: text("claimed_by").references(() => users.id),
+  claimedProductId: text("claimed_product_id").references(() => products.id),
+  claimedAt: timestamp("claimed_at", { withTimezone: true, mode: "date" }),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
+    .notNull()
+    .defaultNow(),
+});
