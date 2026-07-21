@@ -54,7 +54,7 @@ export function VoteButton({
         // Sticker press: hard ink border + offset shadow; the button
         // physically sits down when tapped.
         "flex min-h-11 min-w-11 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-(--hard-shadow-color) font-semibold shadow-hard-sm transition-[translate,box-shadow,background-color,color] duration-100 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-60",
-        size === "lg" ? "gap-0.5 px-4 py-2 text-base" : "px-3 py-1.5 text-sm",
+        size === "lg" ? "gap-1 px-5 py-3 text-lg" : "px-3.5 py-2 text-base",
         voted
           ? "bg-primary text-primary-foreground"
           : "bg-card text-foreground hover:bg-accent",
@@ -66,7 +66,7 @@ export function VoteButton({
         transition={{ duration: 0.25, ease: "easeOut" }}
       >
         <ChevronUp
-          className={size === "lg" ? "size-5" : "size-4"}
+          className={size === "lg" ? "size-6" : "size-5"}
           strokeWidth={3}
         />
       </motion.span>

@@ -11,10 +11,10 @@ export async function Header() {
   const t = await getTranslations();
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4 sm:gap-3 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-5xl items-center gap-2.5 px-4 sm:gap-3.5 sm:px-6">
         <Link
           href="/"
-          className="shrink-0 font-heading text-xl font-extrabold lowercase tracking-tight"
+          className="shrink-0 font-heading text-2xl font-extrabold lowercase tracking-tight"
           aria-label={t("app.name")}
         >
           {t("app.name").toLowerCase()}

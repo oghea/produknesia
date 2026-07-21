@@ -21,14 +21,14 @@ export function SearchForm({ initialQuery = "" }: { initialQuery?: string }) {
         if (trimmed) router.push(`/search?q=${encodeURIComponent(trimmed)}`);
       }}
     >
-      <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+      <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         type="search"
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder={t("placeholder")}
         aria-label={t("placeholder")}
-        className="h-9 w-32 pl-8 transition-[width] focus:w-52 sm:w-44 sm:focus:w-64"
+        className="h-10 w-36 pl-9 transition-[width] focus:w-56 sm:w-48 sm:focus:w-72"
       />
     </form>
   );

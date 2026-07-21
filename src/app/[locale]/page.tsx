@@ -32,19 +32,19 @@ export default async function Home({
 
   const tabCls = (active: boolean) =>
     cn(
-      "flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+      "flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 text-[0.9375rem] font-medium transition-colors",
       active
         ? "bg-foreground text-background"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <FadeUp>
-        <h1 className="font-heading text-2xl font-extrabold tracking-tight sm:text-3xl">
+        <h1 className="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">
           {t("app.tagline")}
         </h1>
-        <div className="mt-4 flex flex-wrap gap-1.5">
+        <div className="mt-5 flex flex-wrap gap-2">
           {cats.map((c) => (
             <Badge
               key={c.id}
@@ -72,10 +72,10 @@ export default async function Home({
       {items.length === 0 ? (
         <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
           <PackageOpen className="size-8 text-muted-foreground" aria-hidden="true" />
-          <p className="text-sm text-muted-foreground">{t("feed.empty")}</p>
+          <p className="text-base text-muted-foreground">{t("feed.empty")}</p>
         </div>
       ) : (
-        <StaggerList className="mt-4 flex flex-col gap-3">
+        <StaggerList className="mt-5 flex flex-col gap-4">
           {items.map((item, i) => (
             <StaggerItem key={item.id}>
               <ProductCard

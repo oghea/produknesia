@@ -25,7 +25,7 @@ export function LanguageSwitcher() {
           href={pathname}
           locale={locale}
           className={cn(
-            "rounded-[5px] px-2 py-0.5 text-xs font-medium transition-colors",
+            "rounded-[6px] px-2.5 py-1 text-sm font-medium transition-colors",
             locale === active
               ? "bg-foreground text-background"
               : "text-muted-foreground hover:text-foreground",

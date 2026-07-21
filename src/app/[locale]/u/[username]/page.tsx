@@ -95,7 +95,7 @@ export default async function ProfilePage({
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <FadeUp>
         <div className="flex items-center gap-4">
           {profile.image ? (
@@ -112,7 +112,7 @@ export default async function ProfilePage({
             </div>
           )}
           <div className="min-w-0">
-            <h1 className="truncate font-heading text-2xl font-bold">
+            <h1 className="truncate font-heading text-3xl font-extrabold tracking-tight">
               {profile.name ?? profile.username}
             </h1>
             {profile.bio && (
@@ -130,13 +130,13 @@ export default async function ProfilePage({
         </div>
       </FadeUp>
 
-      <h2 className="mt-10 flex items-center gap-2 font-heading text-lg font-bold">
+      <h2 className="mt-10 flex items-center gap-2 font-heading text-xl font-bold">
         <Package className="size-4.5 text-primary" aria-hidden="true" />
         {t("submissions")}
       </h2>
       <div className="mt-3 flex flex-col gap-3">
         {submissions.length === 0 ? (
-          <p className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+          <p className="rounded-xl border border-dashed p-6 text-center text-base text-muted-foreground">
             {t("noSubmissions")}
           </p>
         ) : (
@@ -144,13 +144,13 @@ export default async function ProfilePage({
         )}
       </div>
 
-      <h2 className="mt-10 flex items-center gap-2 font-heading text-lg font-bold">
+      <h2 className="mt-10 flex items-center gap-2 font-heading text-xl font-bold">
         <ChevronUp className="size-4.5 text-primary" aria-hidden="true" />
         {t("upvoted")}
       </h2>
       <div className="mt-3 flex flex-col gap-3">
         {upvoted.length === 0 ? (
-          <p className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+          <p className="rounded-xl border border-dashed p-6 text-center text-base text-muted-foreground">
             {t("noUpvotes")}
           </p>
         ) : (

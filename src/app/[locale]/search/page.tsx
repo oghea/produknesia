@@ -16,7 +16,7 @@ function EmptyState({
   return (
     <div className="mt-4 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
       <Icon className="size-8 text-muted-foreground" aria-hidden="true" />
-      <p className="text-sm text-muted-foreground">{text}</p>
+      <p className="text-base text-muted-foreground">{text}</p>
     </div>
   );
 }
@@ -41,8 +41,8 @@ export default async function SearchPage({
     : new Set<string>();
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-      <h1 className="font-heading text-2xl font-bold">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight">
         {t("title", { q: query })}
       </h1>
       {query.length < 2 ? (
@@ -50,7 +50,7 @@ export default async function SearchPage({
       ) : items.length === 0 ? (
         <EmptyState icon={SearchX} text={t("empty")} />
       ) : (
-        <StaggerList className="mt-6 flex flex-col gap-3">
+        <StaggerList className="mt-6 flex flex-col gap-4">
           {items.map((item) => (
             <StaggerItem key={item.id}>
               <ProductCard
