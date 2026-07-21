@@ -2,32 +2,39 @@
 
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
   const t = useTranslations("nav");
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  // null until mounted — the server can't know the theme, so render a
+  // stable placeholder first to avoid a hydration mismatch.
+  const [dark, setDark] = useState<boolean | null>(null);
 
-  // next-themes resolves the theme client-side only; render a stable
-  // placeholder until mounted to avoid a hydration mismatch.
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  function toggle() {
+    const next = !document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", next);
+    try {
+      localStorage.setItem("theme", next ? "dark" : "light");
+    } catch {
+      // Private-mode storage failures shouldn't break the toggle.
+    }
+    setDark(next);
+  }
 
   return (
     <Button
       variant="ghost"
       size="icon"
       aria-label={t("theme")}
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      onClick={toggle}
       className="cursor-pointer"
     >
-      {mounted && resolvedTheme === "dark" ? (
-        <Sun className="size-4" />
-      ) : (
-        <Moon className="size-4" />
-      )}
+      {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
     </Button>
   );
 }

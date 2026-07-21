@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { fontHeading, fontSans } from "@/lib/fonts";
 import { Providers } from "@/components/Providers";
+import { ThemeScript } from "@/components/ThemeScript";
 import { Header } from "@/components/Header";
 import "../globals.css";
 
@@ -43,6 +44,7 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body>
+        <ThemeScript />
         <NextIntlClientProvider>
           <Providers>
             <Header />
