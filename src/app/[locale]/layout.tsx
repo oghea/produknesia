@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { fontHeading, fontSans } from "@/lib/fonts";
 import { Providers } from "@/components/Providers";
+import { ThemeScript } from "@/components/ThemeScript";
 import { Header } from "@/components/Header";
 import "../globals.css";
 
@@ -40,12 +41,14 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       className={`${fontSans.variable} ${fontHeading.variable}`}
+      suppressHydrationWarning
     >
       <body>
+        <ThemeScript />
         <NextIntlClientProvider>
           <Providers>
             <Header />
-            <main className="min-h-[calc(100vh-3.5rem)]">{children}</main>
+            <main className="min-h-[calc(100vh-4rem)]">{children}</main>
           </Providers>
         </NextIntlClientProvider>
       </body>

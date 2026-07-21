@@ -20,7 +20,7 @@ async function Comment({
   const format = await getFormatter();
   return (
     <div className="flex gap-3">
-      <Avatar className="size-8 shrink-0">
+      <Avatar className="size-10 shrink-0">
         <AvatarFallback className="text-sm font-semibold">
           {(comment.authorName ?? "?").charAt(0).toUpperCase()}
         </AvatarFallback>
@@ -51,7 +51,7 @@ async function Comment({
             {t("deleted")}
           </p>
         ) : (
-          <div className="prose prose-sm max-w-none dark:prose-invert">
+          <div className="prose max-w-none dark:prose-invert">
             <ReactMarkdown
               components={{
                 img: () => null,
@@ -101,7 +101,7 @@ export async function CommentSection({
   return (
     <section className="mt-12">
       <Separator />
-      <h2 className="mt-8 font-heading text-lg font-bold">
+      <h2 className="mt-8 font-heading text-xl font-bold">
         {t("title", { count: comments.filter((c) => !c.isDeleted).length })}
       </h2>
 
@@ -109,14 +109,14 @@ export async function CommentSection({
         {isAuthenticated ? (
           <CommentForm productId={productId} slug={slug} />
         ) : (
-          <p className="rounded-lg border border-dashed bg-muted/50 p-4 text-sm text-muted-foreground">
+          <p className="rounded-lg border border-dashed bg-muted/50 p-5 text-base text-muted-foreground">
             {t("signInToComment")}
           </p>
         )}
       </div>
 
       {topLevel.length === 0 && (
-        <p className="mt-6 text-sm text-muted-foreground">{t("empty")}</p>
+        <p className="mt-6 text-base text-muted-foreground">{t("empty")}</p>
       )}
 
       <div className="mt-8 flex flex-col gap-7">

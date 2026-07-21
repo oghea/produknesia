@@ -49,16 +49,16 @@ export default async function CategoryPage({
 
   const tabCls = (active: boolean) =>
     cn(
-      "flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+      "flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 text-[0.9375rem] font-medium transition-colors",
       active
-        ? "bg-primary text-primary-foreground shadow-xs"
+        ? "bg-foreground text-background"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-heading text-2xl font-bold">
+        <h1 className="font-heading text-3xl font-extrabold tracking-tight">
           {locale === "id" ? category.nameId : category.nameEn}
         </h1>
         <nav className="flex gap-1">
@@ -85,18 +85,19 @@ export default async function CategoryPage({
             className="size-8 text-muted-foreground"
             aria-hidden="true"
           />
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {t("categories.empty")}
           </p>
         </div>
       ) : (
-        <StaggerList className="mt-6 flex flex-col gap-3">
-          {items.map((item) => (
+        <StaggerList className="mt-6 flex flex-col gap-4">
+          {items.map((item, i) => (
             <StaggerItem key={item.id}>
               <ProductCard
                 item={item}
                 locale={locale}
                 viewerVoted={votedIds.has(item.id)}
+                rank={sort === "popular" ? i + 1 : undefined}
               />
             </StaggerItem>
           ))}

@@ -25,8 +25,8 @@ export default async function AdminPage({
   const pending = await listPending();
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-      <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+    <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight">{t("title")}</h1>
 
       {pending.length === 0 && (
         <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">

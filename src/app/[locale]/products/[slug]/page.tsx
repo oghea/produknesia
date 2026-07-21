@@ -66,7 +66,7 @@ export default async function ProductPage({
   const { tagline, description } = pickLocalized(product, locale);
 
   return (
-    <article className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+    <article className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       {product.status === "pending" && (
         <p className="mb-6 flex items-center gap-2 rounded-lg border border-chart-2/40 bg-accent p-3 text-sm text-accent-foreground">
           <Clock className="size-4 shrink-0" aria-hidden="true" />
@@ -88,16 +88,16 @@ export default async function ProductPage({
             <Image
               src={product.logoUrl}
               alt=""
-              width={72}
-              height={72}
-              className="size-18 shrink-0 rounded-2xl border object-cover"
+              width={80}
+              height={80}
+              className="size-20 shrink-0 rounded-2xl border object-cover"
             />
           )}
           <div className="min-w-0">
-            <h1 className="font-heading text-2xl font-bold sm:text-3xl">
+            <h1 className="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">
               {product.name}
             </h1>
-            {tagline && <p className="text-muted-foreground">{tagline}</p>}
+            {tagline && <p className="text-lg text-muted-foreground">{tagline}</p>}
             {makerName && (
               <p className="mt-0.5 text-sm text-muted-foreground/80">
                 {makerUsername ? (
@@ -155,7 +155,7 @@ export default async function ProductPage({
       </div>
 
       {description && (
-        <div className="prose prose-sm mt-8 max-w-none dark:prose-invert">
+        <div className="prose mt-8 max-w-none dark:prose-invert">
           <ReactMarkdown>{description}</ReactMarkdown>
         </div>
       )}

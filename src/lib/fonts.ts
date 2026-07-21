@@ -1,11 +1,15 @@
-import { DM_Sans, Space_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Plus_Jakarta_Sans } from "next/font/google";
 
-export const fontSans = DM_Sans({
+// Body: Plus Jakarta Sans — by Tokotype, an Indonesian foundry, designed for
+// Jakarta. The subject's own typography, not a template pick.
+export const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-export const fontHeading = Space_Grotesk({
+// Display: Bricolage Grotesque — chunky and characterful at heavy weights,
+// used with restraint (headings, wordmark, rank numerals).
+export const fontHeading = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-heading",
 });

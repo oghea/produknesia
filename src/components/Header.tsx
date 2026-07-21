@@ -5,23 +5,20 @@ import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { AuthButtons } from "./AuthButtons";
 import { SearchForm } from "./SearchForm";
+import { ThemeToggle } from "./ThemeToggle";
 
 export async function Header() {
   const t = await getTranslations();
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4 sm:gap-3 sm:px-6">
+    <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+      <div className="mx-auto flex h-16 max-w-5xl items-center gap-2.5 px-4 sm:gap-3.5 sm:px-6">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2"
+          className="shrink-0 font-heading text-2xl font-extrabold lowercase tracking-tight"
           aria-label={t("app.name")}
         >
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary font-heading text-lg font-bold text-primary-foreground">
-            P
-          </span>
-          <span className="hidden font-heading text-lg font-bold sm:inline">
-            {t("app.name")}
-          </span>
+          {t("app.name").toLowerCase()}
+          <span className="text-primary">.</span>
         </Link>
 
         <div className="flex-1" />
@@ -30,8 +27,8 @@ export async function Header() {
 
         <Button
           size="sm"
-          className="cursor-pointer"
           nativeButton={false}
+          className="cursor-pointer"
           render={<Link href="/submit" />}
         >
           <Plus className="size-4" />
@@ -41,6 +38,7 @@ export async function Header() {
         <div className="hidden sm:block">
           <LanguageSwitcher />
         </div>
+        <ThemeToggle />
         <AuthButtons />
       </div>
     </header>

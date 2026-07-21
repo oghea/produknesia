@@ -9,9 +9,9 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
     // PGlite (in-memory Postgres) cold-starts WASM + runs migrations in
-    // beforeEach; under parallel test-file execution this can exceed the
-    // 5s defaults, so give tests and hooks generous headroom.
-    testTimeout: 30_000,
-    hookTimeout: 30_000,
+    // beforeEach; under parallel test-file execution on a loaded machine
+    // this can far exceed the 5s defaults, so give generous headroom.
+    testTimeout: 60_000,
+    hookTimeout: 60_000,
   },
 });
