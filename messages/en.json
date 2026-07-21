@@ -52,7 +52,9 @@
     "logoSingle": "Only one logo file is allowed.",
     "formError": "Something went wrong. Check the fields and try again.",
     "commentRequired": "Comment cannot be empty.",
-    "commentTooLong": "Comment is too long (max 2000 characters)."
+    "commentTooLong": "Comment is too long (max 2000 characters).",
+    "updateTitleRequired": "Fill in at least one title.",
+    "updateBodyRequired": "Fill in at least one body."
   },
   "comments": {
     "title": "Comments ({count})",
@@ -101,5 +103,22 @@
     "noUpvotes": "No upvotes yet.",
     "statusPending": "Under review",
     "statusRejected": "Rejected"
+  },
+  "updates": {
+    "title": "Updates",
+    "post": "Post update",
+    "formTitle": "Post an update",
+    "version": "Version (optional)",
+    "titleId": "Title (Indonesian)",
+    "titleEn": "Title (English)",
+    "bodyId": "What's new (Indonesian, markdown)",
+    "bodyEn": "What's new (English, markdown)",
+    "pairHint": "Fill at least one language for the title and the body.",
+    "send": "Submit for review",
+    "success": "Submitted! Your update is waiting for review.",
+    "empty": "No updates yet.",
+    "pendingBadge": "Under review",
+    "rejectedBadge": "Rejected: {reason}",
+    "noReason": "not provided"
   }
 }

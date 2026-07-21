@@ -14,3 +14,11 @@ export function pickLocalized(row: LocalizedRow, locale: string) {
       (id ? row.descriptionEn : row.descriptionId),
   };
 }
+
+export function pickLocalizedPair(
+  idValue: string | null,
+  enValue: string | null,
+  locale: string,
+): string | null {
+  return locale === "id" ? (idValue ?? enValue) : (enValue ?? idValue);
+}

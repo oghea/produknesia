@@ -52,7 +52,9 @@
     "logoSingle": "Hanya satu berkas logo yang diperbolehkan.",
     "formError": "Ada yang salah. Periksa kolom lalu coba lagi.",
     "commentRequired": "Komentar tidak boleh kosong.",
-    "commentTooLong": "Komentar terlalu panjang (maksimal 2000 karakter)."
+    "commentTooLong": "Komentar terlalu panjang (maksimal 2000 karakter).",
+    "updateTitleRequired": "Isi minimal satu judul.",
+    "updateBodyRequired": "Isi minimal satu isi."
   },
   "comments": {
     "title": "Komentar ({count})",
@@ -101,5 +103,22 @@
     "noUpvotes": "Belum ada dukungan.",
     "statusPending": "Sedang ditinjau",
     "statusRejected": "Ditolak"
+  },
+  "updates": {
+    "title": "Pembaruan",
+    "post": "Tulis pembaruan",
+    "formTitle": "Tulis pembaruan",
+    "version": "Versi (opsional)",
+    "titleId": "Judul (Bahasa Indonesia)",
+    "titleEn": "Judul (Bahasa Inggris)",
+    "bodyId": "Apa yang baru (Bahasa Indonesia, markdown)",
+    "bodyEn": "Apa yang baru (Bahasa Inggris, markdown)",
+    "pairHint": "Isi minimal satu bahasa untuk judul dan isi.",
+    "send": "Kirim untuk ditinjau",
+    "success": "Terkirim! Pembaruanmu sedang menunggu peninjauan.",
+    "empty": "Belum ada pembaruan.",
+    "pendingBadge": "Sedang ditinjau",
+    "rejectedBadge": "Ditolak: {reason}",
+    "noReason": "tidak diberikan"
   }
 }
