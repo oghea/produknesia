@@ -34,7 +34,10 @@
   "feed": {
     "empty": "Belum ada produk. Jadilah yang pertama meluncurkan!",
     "by": "oleh {name}",
-    "votes": "{count} suara"
+    "votes": "{count} suara",
+    "today": "Hari ini",
+    "yesterday": "Kemarin",
+    "loadMore": "Muat lagi"
   },
   "submit": {
     "title": "Kirim produk",

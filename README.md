@@ -33,3 +33,11 @@ Sign in once, then promote yourself in the Neon SQL console:
 - `pnpm dev` / `pnpm build` / `pnpm start`
 - `pnpm test` / `pnpm test:watch`
 - `pnpm db:generate` / `pnpm db:migrate` / `pnpm db:seed`
+
+## Launch day
+
+1. Wipe demo data (Neon SQL console):
+   `delete from products where website_url like '%.contoh-demo.id%';`
+   `delete from users where email like '%@dummy.produknesia.local%';`
+2. Remove `LAUNCH_MODE` from Vercel env → redeploy.
+3. Announce: `npx tsx scripts/announce-launch.ts --yes`

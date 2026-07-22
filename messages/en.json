@@ -34,7 +34,10 @@
   "feed": {
     "empty": "No products yet. Be the first to launch!",
     "by": "by {name}",
-    "votes": "{count} votes"
+    "votes": "{count} votes",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "loadMore": "Load more"
   },
   "submit": {
     "title": "Submit a product",

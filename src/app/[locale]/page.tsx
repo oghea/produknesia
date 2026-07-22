@@ -1,13 +1,16 @@
+import type { ReactNode } from "react";
 import { Flame, PackageOpen, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { auth } from "@/auth";
 import { isAdmin } from "@/auth-helpers";
 import { isComingSoon } from "@/lib/launch";
-import { listFeed, type FeedSort } from "@/db/queries/products";
+import { listFeed, listFeedPage } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { listCategories } from "@/db/queries/categories";
+import { serializeFeedItems } from "@/lib/feed-serialize";
 import { ProductCard } from "@/components/ProductCard";
+import { DailyDigest } from "@/components/DailyDigest";
 import { Landing } from "@/components/Landing";
 import { FadeUp, StaggerItem, StaggerList } from "@/components/motion-primitives";
 import { Badge } from "@/components/ui/badge";
@@ -22,16 +25,12 @@ export default async function Home({
 }) {
   const { locale } = await params;
   const { sort: sortParam } = await searchParams;
-  const sort: FeedSort = sortParam === "newest" ? "newest" : "popular";
+  const isPopular = sortParam === "popular";
   const t = await getTranslations();
   const session = await auth();
   if (isComingSoon() && !isAdmin(session)) {
     return <Landing />;
   }
-  const [items, cats] = await Promise.all([listFeed(sort), listCategories()]);
-  const votedIds = session?.user
-    ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
-    : new Set<string>();
 
   const tabCls = (active: boolean) =>
     cn(
@@ -40,6 +39,62 @@ export default async function Home({
         ? "bg-foreground text-background"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",
     );
+
+  let feedBody: ReactNode;
+  let cats;
+
+  if (isPopular) {
+    const [items, catsResult] = await Promise.all([
+      listFeed("popular"),
+      listCategories(),
+    ]);
+    cats = catsResult;
+    const votedIds = session?.user
+      ? await getVotedProductIds(session.user.id, items.map((i) => i.id))
+      : new Set<string>();
+
+    feedBody =
+      items.length === 0 ? (
+        <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
+          <PackageOpen className="size-8 text-muted-foreground" aria-hidden="true" />
+          <p className="text-base text-muted-foreground">{t("feed.empty")}</p>
+        </div>
+      ) : (
+        <StaggerList className="mt-5 flex flex-col gap-4">
+          {items.map((item, i) => (
+            <StaggerItem key={item.id}>
+              <ProductCard
+                item={item}
+                locale={locale}
+                viewerVoted={votedIds.has(item.id)}
+                rank={i + 1}
+              />
+            </StaggerItem>
+          ))}
+        </StaggerList>
+      );
+  } else {
+    const [page, catsResult] = await Promise.all([
+      listFeedPage(null),
+      listCategories(),
+    ]);
+    cats = catsResult;
+    const initialItems = await serializeFeedItems(page.items);
+
+    feedBody =
+      initialItems.length === 0 ? (
+        <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
+          <PackageOpen className="size-8 text-muted-foreground" aria-hidden="true" />
+          <p className="text-base text-muted-foreground">{t("feed.empty")}</p>
+        </div>
+      ) : (
+        <DailyDigest
+          initialItems={initialItems}
+          initialCursor={page.nextCursor}
+          locale={locale}
+        />
+      );
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
@@ -62,35 +117,17 @@ export default async function Home({
       </FadeUp>
 
       <div className="mt-8 flex items-center gap-1 border-b pb-3">
-        <Link href="/?sort=popular" className={tabCls(sort === "popular")}>
-          <Flame className="size-4" aria-hidden="true" />
-          {t("home.popular")}
-        </Link>
-        <Link href="/?sort=newest" className={tabCls(sort === "newest")}>
+        <Link href="/" className={tabCls(!isPopular)}>
           <Sparkles className="size-4" aria-hidden="true" />
           {t("home.newest")}
         </Link>
+        <Link href="/?sort=popular" className={tabCls(isPopular)}>
+          <Flame className="size-4" aria-hidden="true" />
+          {t("home.popular")}
+        </Link>
       </div>
 
-      {items.length === 0 ? (
-        <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
-          <PackageOpen className="size-8 text-muted-foreground" aria-hidden="true" />
-          <p className="text-base text-muted-foreground">{t("feed.empty")}</p>
-        </div>
-      ) : (
-        <StaggerList className="mt-5 flex flex-col gap-4">
-          {items.map((item, i) => (
-            <StaggerItem key={item.id}>
-              <ProductCard
-                item={item}
-                locale={locale}
-                viewerVoted={votedIds.has(item.id)}
-                rank={sort === "popular" ? i + 1 : undefined}
-              />
-            </StaggerItem>
-          ))}
-        </StaggerList>
-      )}
+      {feedBody}
     </div>
   );
 }

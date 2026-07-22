@@ -1,27 +1,27 @@
 import Image from "next/image";
 import { MessageCircle } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { pickLocalized } from "@/lib/locale-content";
 import type { FeedItem } from "@/db/queries/products";
 import { cn } from "@/lib/utils";
 import { VoteButton } from "./VoteButton";
 
-export async function ProductCard({
+export function ProductCard({
   item,
   locale,
   viewerVoted,
   showVote = true,
   rank,
 }: {
-  item: FeedItem;
+  item: Omit<FeedItem, "launchedAt"> & { launchedAt: Date | string | null };
   locale: string;
   viewerVoted: boolean;
   showVote?: boolean;
   /** 1-based leaderboard position — shown only where order carries meaning. */
   rank?: number;
 }) {
-  const t = await getTranslations("feed");
+  const t = useTranslations("feed");
   const { tagline } = pickLocalized(
     { ...item, descriptionId: null, descriptionEn: null },
     locale,

@@ -10,6 +10,8 @@ import {
   approveProduct,
   rejectProduct,
   countApprovedProducts,
+  listFeedPage,
+  FEED_PAGE_SIZE,
 } from "./products";
 import { listCategories } from "./categories";
 
@@ -115,6 +117,20 @@ describe("countApprovedProducts", () => {
     await approveProduct(a.id, db);
     expect(await countApprovedProducts(db)).toBe(1);
   });
+
+  it("excludes demo products from the count", async () => {
+    const a = await createProduct(newProduct({ name: "Live One" }), db);
+    const demo = await createProduct(
+      newProduct({
+        name: "Demo One",
+        websiteUrl: "https://demo-one.contoh-demo.id",
+      }),
+      db,
+    );
+    await approveProduct(a.id, db);
+    await approveProduct(demo.id, db);
+    expect(await countApprovedProducts(db)).toBe(1);
+  });
 });
 
 describe("listCategories", () => {
@@ -124,5 +140,54 @@ describe("listCategories", () => {
       .values({ slug: "saas", nameId: "SaaS", nameEn: "SaaS" });
     const cats = await listCategories(db);
     expect(cats.map((c) => c.slug)).toEqual(["ai", "saas"]);
+  });
+});
+
+describe("listFeedPage", () => {
+  it("walks pages by cursor without overlap or gaps", async () => {
+    const { products } = await import("@/db/schema");
+    const { eq } = await import("drizzle-orm");
+    const made: string[] = [];
+    for (let i = 0; i < 35; i++) {
+      const p = await createProduct(newProduct({ name: `Feed ${i}` }), db);
+      await approveProduct(p.id, db);
+      // Distinct launch times so ordering is deterministic.
+      await db
+        .update(products)
+        .set({ launchedAt: new Date(Date.UTC(2026, 0, 1, 0, i)) })
+        .where(eq(products.id, p.id));
+      made.push(p.id);
+    }
+    const page1 = await listFeedPage(null, db);
+    expect(page1.items).toHaveLength(FEED_PAGE_SIZE);
+    expect(page1.nextCursor).not.toBeNull();
+    const page2 = await listFeedPage(page1.nextCursor, db);
+    expect(page2.items).toHaveLength(5);
+    expect(page2.nextCursor).toBeNull();
+    const all = [...page1.items, ...page2.items].map((i) => i.id);
+    expect(new Set(all).size).toBe(35);
+    expect(page1.items[0].name).toBe("Feed 34"); // newest first
+  });
+
+  it("treats a garbage cursor as the first page", async () => {
+    const p = await createProduct(newProduct({ name: "Solo" }), db);
+    await approveProduct(p.id, db);
+    const page = await listFeedPage("not_a_cursor", db);
+    expect(page.items.map((i) => i.name)).toContain("Solo");
+  });
+
+  it("does not drop rows that share a launchedAt timestamp", async () => {
+    const { products } = await import("@/db/schema");
+    const { eq } = await import("drizzle-orm");
+    const shared = new Date("2026-01-05T00:00:00.000Z");
+    for (let i = 0; i < 35; i++) {
+      const p = await createProduct(newProduct({ name: `Tie ${i}` }), db);
+      await approveProduct(p.id, db);
+      await db.update(products).set({ launchedAt: shared }).where(eq(products.id, p.id));
+    }
+    const page1 = await listFeedPage(null, db);
+    const page2 = await listFeedPage(page1.nextCursor!, db);
+    expect(page1.items.length + page2.items.length).toBe(35);
+    expect(new Set([...page1.items, ...page2.items].map((i) => i.id)).size).toBe(35);
   });
 });
