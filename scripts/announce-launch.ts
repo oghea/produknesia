@@ -25,6 +25,7 @@ async function main() {
   ];
 
   const base = process.env.APP_URL ?? "https://produknesia.antaras.io";
+  console.log(`Link base: ${base}`);
   const html = `
 <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#222">
   <h2 style="margin:24px 0 8px">Panggungnya dibuka. 🚀</h2>

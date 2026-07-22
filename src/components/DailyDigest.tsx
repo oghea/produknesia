@@ -3,7 +3,8 @@
 import { useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
-import { loadMoreFeed, type DigestItem } from "@/app/actions/feed";
+import { loadMoreFeed } from "@/app/actions/feed";
+import type { DigestItem } from "@/lib/feed-serialize";
 import { groupByLaunchDay } from "@/lib/feed-days";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -34,9 +35,13 @@ export function DailyDigest({
   function handleLoadMore() {
     if (!cursor || pending) return;
     startTransition(async () => {
-      const page = await loadMoreFeed(cursor);
-      setItems((prev) => [...prev, ...page.items]);
-      setCursor(page.nextCursor);
+      try {
+        const page = await loadMoreFeed(cursor);
+        setItems((prev) => [...prev, ...page.items]);
+        setCursor(page.nextCursor);
+      } catch (error) {
+        console.error(error);
+      }
     });
   }
 

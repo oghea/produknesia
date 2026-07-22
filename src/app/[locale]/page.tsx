@@ -8,7 +8,7 @@ import { isComingSoon } from "@/lib/launch";
 import { listFeed, listFeedPage } from "@/db/queries/products";
 import { getVotedProductIds } from "@/db/queries/votes";
 import { listCategories } from "@/db/queries/categories";
-import { serializeFeedItems } from "@/app/actions/feed";
+import { serializeFeedItems } from "@/lib/feed-serialize";
 import { ProductCard } from "@/components/ProductCard";
 import { DailyDigest } from "@/components/DailyDigest";
 import { Landing } from "@/components/Landing";
@@ -25,7 +25,7 @@ export default async function Home({
 }) {
   const { locale } = await params;
   const { sort: sortParam } = await searchParams;
-  const isPopular = sortParam === "populer";
+  const isPopular = sortParam === "popular";
   const t = await getTranslations();
   const session = await auth();
   if (isComingSoon() && !isAdmin(session)) {
@@ -121,7 +121,7 @@ export default async function Home({
           <Sparkles className="size-4" aria-hidden="true" />
           {t("home.newest")}
         </Link>
-        <Link href="/?sort=populer" className={tabCls(isPopular)}>
+        <Link href="/?sort=popular" className={tabCls(isPopular)}>
           <Flame className="size-4" aria-hidden="true" />
           {t("home.popular")}
         </Link>

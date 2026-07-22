@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, isNotNull, lt, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, lt, notLike, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import type { DBClient } from "@/db/types";
 import {
@@ -213,7 +213,14 @@ export async function countApprovedProducts(
   const [row] = await dbc
     .select({ n: sql<number>`count(*)::int` })
     .from(products)
-    .where(eq(products.status, "approved"));
+    .where(
+      and(
+        eq(products.status, "approved"),
+        // Demo/seed products are wiped at launch; never count them toward
+        // the landing page's social-proof number.
+        notLike(products.websiteUrl, "%.contoh-demo.id%"),
+      ),
+    );
   return row.n;
 }
 
@@ -233,6 +240,12 @@ export async function listFeedPage(
   dbc: DBClient = db,
 ): Promise<{ items: FeedItem[]; nextCursor: string | null }> {
   const decoded = cursor ? decodeCursor(cursor) : null;
+  // Postgres stores launched_at at microsecond precision, but the cursor
+  // round-trips through a JS Date (millisecond precision). Compare and
+  // order on the millisecond-truncated value so the predicate and the
+  // sort agree — otherwise real rows silently fail to match the cursor
+  // and same-millisecond rows can be skipped.
+  const launchedMs = sql`date_trunc('milliseconds', ${products.launchedAt})`;
   const base = and(
     eq(products.status, "approved"),
     isNotNull(products.launchedAt),
@@ -241,11 +254,8 @@ export async function listFeedPage(
     ? and(
         base,
         or(
-          lt(products.launchedAt, decoded.at),
-          and(
-            eq(products.launchedAt, decoded.at),
-            lt(products.id, decoded.id),
-          ),
+          sql`${launchedMs} < ${decoded.at}`,
+          and(sql`${launchedMs} = ${decoded.at}`, lt(products.id, decoded.id)),
         ),
       )
     : base;
@@ -255,7 +265,7 @@ export async function listFeedPage(
     .from(products)
     .innerJoin(users, eq(products.makerId, users.id))
     .where(where)
-    .orderBy(desc(products.launchedAt), desc(products.id))
+    .orderBy(sql`${launchedMs} desc`, desc(products.id))
     .limit(FEED_PAGE_SIZE + 1);
 
   const items = rows.slice(0, FEED_PAGE_SIZE);
