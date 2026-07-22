@@ -15,10 +15,13 @@ async function main() {
     .from(users)
     .where(isNotNull(users.email));
   const recipients = [
-    ...new Set([
-      ...subscriberEmails,
-      ...userRows.map((r) => r.email as string),
-    ]),
+    ...new Set(
+      [...subscriberEmails, ...userRows.map((r) => r.email as string)]
+        .map((e) => e.trim().toLowerCase())
+        // Defensive: never email seed-data addresses even if the wipe
+        // hasn't run yet.
+        .filter((e) => !e.endsWith("@dummy.produknesia.local")),
+    ),
   ];
 
   const base = process.env.APP_URL ?? "https://produknesia.antaras.io";
